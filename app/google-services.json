@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "12284903503",
+    "firebase_url": "https://allamvizsga-4e26b.firebaseio.com",
+    "project_id": "allamvizsga-4e26b",
+    "storage_bucket": "allamvizsga-4e26b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12284903503:android:6ff33f95f6739e3b",
+        "android_client_info": {
+          "package_name": "com.allamvizsga.tamas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12284903503-ulu0u2u8j1us6homkhevio7s3rmlbia8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.allamvizsga.tamas",
+            "certificate_hash": "456431699682bccb8c343a6488e2afb54fcd5e1c"
+          }
+        },
+        {
+          "client_id": "12284903503-cnoj6glsar95cv2nq332nhk731q13heb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzODRldZtVEwn1XktTrClYKqmFb0UJbxQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12284903503-cnoj6glsar95cv2nq332nhk731q13heb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
