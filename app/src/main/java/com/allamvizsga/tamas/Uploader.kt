@@ -8,7 +8,7 @@ fun uploadWalk(walk: Walk) {
     val stations = walk.stations
 
     val stationIds = mutableListOf<String>()
-    stations.forEach {
+    stations?.forEach {
         database.child("stations").apply {
             val id = push().key
             child(id).setValue(it)
