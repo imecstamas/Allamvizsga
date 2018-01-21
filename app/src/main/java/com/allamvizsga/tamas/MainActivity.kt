@@ -1,5 +1,6 @@
 package com.allamvizsga.tamas
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,8 +9,7 @@ import com.allamvizsga.tamas.model.Coordinate
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.allamvizsga.tamas.walklist.WalkListActivity
 import org.koin.android.ext.android.inject
 
 
@@ -50,28 +50,9 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            var id = ""
-            downloadAllButton.setOnClickListener {
-                walkRepository.getAll()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ walks ->
-                        println("Walks: $walks")
-                        id = walks[0].id!!
-                    }, { error ->
-                        error.printStackTrace()
-                    })
-            }
+            walksButton.setOnClickListener {
+                startActivity(Intent(this@MainActivity, WalkListActivity::class.java))
 
-            downloadOneButton.setOnClickListener {
-                walkRepository.getById(id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ walk ->
-                        println("Walk: $walk")
-                    }, { error ->
-                        error.printStackTrace()
-                    })
             }
         }
     }
