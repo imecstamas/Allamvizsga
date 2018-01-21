@@ -6,21 +6,19 @@ import com.allamvizsga.tamas.model.Coordinate
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
-import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var walkRepository: WalkRepository
+    private val walkRepository: WalkRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        walkRepository = WalkRepository(FirebaseDatabase.getInstance().reference)
 
         upload_button.setOnClickListener {
             walkRepository.saveWalk(Walk(title = "Kolozsvari seta 3",
