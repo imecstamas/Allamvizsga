@@ -13,7 +13,12 @@ class WalkDTO(val title: String, val description: String, val imageUrl: String)
  */
 fun mapToWalk(dataSnapShot: DataSnapshot): Walk {
     val resultMap: Map<*, *> = dataSnapShot.value as Map<*, *>
-    return Walk(dataSnapShot.key, resultMap["title"] as String, resultMap["description"] as String, resultMap["imageUrl"] as String)
+    return Walk(
+        dataSnapShot.key,
+        resultMap["title"] as String,
+        resultMap["description"] as String,
+        resultMap["imageUrl"] as String
+    )
 }
 
 /**
@@ -22,7 +27,13 @@ fun mapToWalk(dataSnapShot: DataSnapshot): Walk {
 fun mapToStation(dataSnapShot: DataSnapshot): Station {
     val resultMap: Map<*, *> = dataSnapShot.value as Map<*, *>
     val coordinate = resultMap["coordinate"] as Map<*, *>
-    return Station(dataSnapShot.key, resultMap["title"] as String, Coordinate(coordinate["latitude"] as Double, coordinate["longitude"] as Double), resultMap["description"] as String, resultMap["imageUrl"] as String)
+    return Station(
+        dataSnapShot.key,
+        resultMap["title"] as String,
+        Coordinate(coordinate["latitude"] as Double, coordinate["longitude"] as Double),
+        resultMap["description"] as String,
+        resultMap["imageUrl"] as String
+    )
 }
 
 /**
