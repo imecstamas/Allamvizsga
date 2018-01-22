@@ -11,7 +11,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".walklist.WalkListActivity"></activity>
+        <activity android:name="com.allamvizsga.tamas.feature.walklist.WalkListActivity" />
     </application>
 
 </manifest>

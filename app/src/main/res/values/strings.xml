@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Allamvizsga</string>
     <string name="walks">Walks</string>
+    <string name="walk_image_content_description">Walk image</string>
 </resources>

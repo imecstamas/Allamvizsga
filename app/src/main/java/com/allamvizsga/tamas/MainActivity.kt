@@ -5,11 +5,11 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.allamvizsga.tamas.databinding.ActivityMainBinding
+import com.allamvizsga.tamas.feature.walklist.WalkListActivity
 import com.allamvizsga.tamas.model.Coordinate
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
-import com.allamvizsga.tamas.walklist.WalkListActivity
 import org.koin.android.ext.android.inject
 
 
