@@ -5,52 +5,68 @@
     <data class=".WalkItemBinding">
 
         <variable
-            name="viewModel"
-            type="com.allamvizsga.tamas.feature.walklist.WalkItemViewModel" />
+                name="viewModel"
+                type="com.allamvizsga.tamas.feature.walklist.WalkItemViewModel"/>
 
     </data>
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        xmlns:tools="http://schemas.android.com/tools"
+                                        android:foreground="?selectableItemBackground"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/image_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/walk_image_content_description"
-                android:src="@{viewModel.walk.imageUrl}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@mipmap/ic_launcher" />
+                    android:id="@+id/image_view"
+                    android:layout_width="0dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/image_transition"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/walk_image_content_description"
+                    android:src="@{viewModel.walk.imageUrl}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHeight_default="wrap"
+                    app:layout_constraintBottom_toTopOf="@+id/description_text_view"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintDimensionRatio="16:9"
+                    tools:src="@mipmap/ic_launcher"/>
 
             <TextView
-                android:id="@+id/title_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.walk.title}"
-                app:layout_constraintBottom_toBottomOf="@+id/image_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Title" />
+                    android:id="@+id/title_text_view"
+                    android:layout_width="0dp"
+                    android:paddingStart="@dimen/activity_horizontal_margin"
+                    android:paddingEnd="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/base_line"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@android:color/white"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.walk.title}"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Title"/>
 
             <TextView
-                android:id="@+id/description_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.walk.description}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image_view"
-                tools:text="Description" />
+                    android:id="@+id/description_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:paddingEnd="@dimen/activity_horizontal_margin"
+                    android:paddingStart="@dimen/activity_horizontal_margin"
+                    android:text="@{viewModel.walk.description}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/image_view"
+                    tools:text="Description"/>
 
         </android.support.constraint.ConstraintLayout>
 
