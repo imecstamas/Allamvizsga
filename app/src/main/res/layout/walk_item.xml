@@ -6,7 +6,7 @@
 
         <variable
                 name="viewModel"
-                type="com.allamvizsga.tamas.feature.walklist.WalkItemViewModel"/>
+                type="com.allamvizsga.tamas.feature.walk.list.WalkItemViewModel"/>
 
     </data>
 

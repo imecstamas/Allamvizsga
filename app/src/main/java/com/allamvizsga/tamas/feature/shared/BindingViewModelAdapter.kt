@@ -8,13 +8,14 @@ import android.support.annotation.CallSuper
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.allamvizsga.tamas.BR
 
 abstract class BindingViewModelAdapter<VB : ViewDataBinding, VM : Any> : RecyclerView.Adapter<BindingViewModelAdapter.BindingViewHolder<VB, VM>>() {
 
     protected var recyclerView: RecyclerView? = null
-    private var itemClickListener: ((position: Int) -> Unit)? = null
+    private var itemClickListener: ((view: View, position: Int) -> Unit)? = null
     private val rebindCallback: OnRebindCallback<VB>
 
     init {
@@ -39,7 +40,7 @@ abstract class BindingViewModelAdapter<VB : ViewDataBinding, VM : Any> : Recycle
 
     protected abstract fun createViewModel(context: Context, @LayoutRes viewType: Int): VM?
 
-    fun setItemClickListener(itemClickListener: (position: Int) -> Unit) {
+    fun setItemClickListener(itemClickListener: (view: View, position: Int) -> Unit) {
         this.itemClickListener = itemClickListener
     }
 
@@ -86,10 +87,10 @@ abstract class BindingViewModelAdapter<VB : ViewDataBinding, VM : Any> : Recycle
             }
         }
 
-        fun setItemClickListener(itemClickListener: ((position: Int) -> Unit)?) {
+        fun setItemClickListener(itemClickListener: ((view: View, position: Int) -> Unit)?) {
             binding.root.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    itemClickListener?.invoke(adapterPosition)
+                    itemClickListener?.invoke(it, adapterPosition)
                 }
             }
         }

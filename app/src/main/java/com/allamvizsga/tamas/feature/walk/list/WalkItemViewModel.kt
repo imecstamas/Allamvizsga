@@ -1,4 +1,4 @@
-package com.allamvizsga.tamas.feature.walklist
+package com.allamvizsga.tamas.feature.walk.list
 
 import android.databinding.ObservableField
 import com.allamvizsga.tamas.model.Walk

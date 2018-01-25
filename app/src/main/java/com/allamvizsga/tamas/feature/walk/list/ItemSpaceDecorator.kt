@@ -1,4 +1,4 @@
-package com.allamvizsga.tamas.feature.walklist
+package com.allamvizsga.tamas.feature.walk.list
 
 import android.content.Context
 import android.graphics.Rect
