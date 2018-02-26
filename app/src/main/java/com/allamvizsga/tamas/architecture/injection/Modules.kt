@@ -14,5 +14,5 @@ val dataBaseReferenceModule = applicationContext {
 
 val viewModelModule = applicationContext {
     viewModel { WalkListViewModel(get()) }
-    viewModel { WalkDetailViewModel() }
+    viewModel { WalkDetailViewModel(get()) }
 }

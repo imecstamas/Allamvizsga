@@ -2,17 +2,17 @@ package com.allamvizsga.tamas.feature.walk.list
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.databinding.WalkListActivityBinding
+import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.feature.walk.detail.WalkDetailActivity
 import com.allamvizsga.tamas.util.extension.observe
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import com.allamvizsga.tamas.util.extension.startActivityWithTransition
 import org.koin.android.architecture.ext.getViewModel
 
-class WalkListActivity : AppCompatActivity() {
+class WalkListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,17 +23,12 @@ class WalkListActivity : AppCompatActivity() {
             recyclerView.adapter = adapter
         }
         adapter.setItemClickListener { view, position ->
-            startActivityWithTransition(WalkDetailActivity.getStartIntent(this, adapter.walks[position].imageUrl), view.findViewById<ImageView>(R.id.image_view))
+            startActivityWithTransition(WalkDetailActivity.getStartIntent(this, adapter.walks[position].id!!, adapter.walks[position].imageUrl), view.findViewById<ImageView>(R.id.image_view))
         }
         getViewModel<WalkListViewModel>().walks.observe(this) { walks ->
             walks?.let {
                 adapter.walks = it
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        supportFinishAfterTransition()
-        return super.onSupportNavigateUp()
     }
 }
