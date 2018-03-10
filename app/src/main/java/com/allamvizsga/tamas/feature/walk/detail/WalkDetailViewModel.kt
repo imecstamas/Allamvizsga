@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewModel() {
 
     private var disposable: Disposable? = null
-    private var stations: List<Station>? = null
+    var stations: List<Station>? = null
 
     val imageUrl = ObservableField<String>()
 
@@ -24,12 +24,6 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
                 }, {
                     it.printStackTrace()
                 })
-    }
-
-    fun startWalk() {
-        stations?.forEach {
-            //TODO register geofences for stations
-        }
     }
 
     override fun onCleared() {

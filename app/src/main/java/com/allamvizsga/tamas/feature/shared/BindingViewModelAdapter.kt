@@ -48,7 +48,7 @@ abstract class BindingViewModelAdapter<VB : ViewDataBinding, VM : Any> : Recycle
         this.recyclerView = recyclerView
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = null
     }
 
