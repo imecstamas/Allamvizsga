@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <!--suppress AndroidUnknownAttribute -->
+    <data class=".StationDetailBinding">
+
+        <variable name="viewModel" type="com.allamvizsga.tamas.feature.station.StationViewModel"/>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".feature.station.StationDetailActivity">
+
+        <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:onClick="@{() -> viewModel.onButtonClicked()}"
+                android:src="@{viewModel.fabResource}"
+                android:layout_height="wrap_content"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

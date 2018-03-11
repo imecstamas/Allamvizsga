@@ -12,6 +12,7 @@ import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
 import com.allamvizsga.tamas.feature.shared.BaseActivity
+import com.allamvizsga.tamas.feature.station.StationDetailActivity
 import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import com.google.android.gms.awareness.Awareness
@@ -34,6 +35,7 @@ class WalkDetailActivity : BaseActivity() {
             binding.viewModel = viewModel
             setUpToolbar(binding.toolbar)
             binding.button.setOnClickListener {
+                startActivity(StationDetailActivity.getStartIntent(this, viewModel.stations!![0].id!!))
                 runWithPermission(android.Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE, ::registerLocationFence, ::showPermissionRationale)
             }
         }

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
             uploadButton.setOnClickListener {
                 walkRepository.saveWalk(
                         Walk(
-                                title = "Fontos helyek",
+                                title = "Nagyon fontos helyek",
                                 description = "Fontos helyek mint munkahely es otthon",
                                 imageUrl = "https://firebasestorage.googleapis.com/v0/b/allamvizsga-4e26b.appspot.com/o/pictures%2Fregi.jpg?alt=media&token=2b585a16-42d8-4218-9801-0b121232a699",
                                 stations = arrayListOf(
@@ -31,13 +31,15 @@ class MainActivity : AppCompatActivity() {
                                                 title = "Otthon",
                                                 coordinate = Coordinate(46.763212, 23.597362),
                                                 description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                                                imageUrl = "http://static.panoramio.com/photos/large/42441030.jpg"
+                                                imageUrl = "http://static.panoramio.com/photos/large/42441030.jpg",
+                                                audioUrl = "https://firebasestorage.googleapis.com/v0/b/allamvizsga-4e26b.appspot.com/o/audio%2FVelence%20%20varosnezes.mp3?alt=media&token=acba7a67-dcb7-43dc-bad5-34329d6aa14f"
                                         ),
                                         Station(
                                                 title = "Munkahely",
                                                 coordinate = Coordinate(46.78848085, 23.59455932),
                                                 description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                                                imageUrl = "http://clujbusiness.ro/wp-content/uploads/2016/06/halcyon_mobile_a-01.png"
+                                                imageUrl = "http://clujbusiness.ro/wp-content/uploads/2016/06/halcyon_mobile_a-01.png",
+                                                audioUrl = "https://firebasestorage.googleapis.com/v0/b/allamvizsga-4e26b.appspot.com/o/audio%2FVelence%20%20varosnezes.mp3?alt=media&token=acba7a67-dcb7-43dc-bad5-34329d6aa14f"
                                         )
                                 )
                         )

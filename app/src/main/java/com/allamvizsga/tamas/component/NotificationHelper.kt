@@ -38,6 +38,8 @@ object NotificationHelper {
         // Get a PendingIntent containing the entire back stack.
         val notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
+        //TODO send the station id in the notification
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColor(Color.RED)

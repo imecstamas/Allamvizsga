@@ -13,15 +13,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-
         <meta-data
                 android:name="com.google.android.awareness.API_KEY"
                 android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM"/>
 
         <!-- We will need this for beacon fences -->
-        <!--<meta-data-->
-        <!--android:name="com.google.android.nearby.messages.API_KEY"-->
-        <!--android:value="YOUR_API_KEY" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.nearby.messages.API_KEY" -->
+        <!-- android:value="YOUR_API_KEY" /> -->
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -36,6 +35,9 @@
         <receiver
                 android:name=".component.FenceReceiver"
                 android:enabled="true"/>
+
+        <activity android:name=".feature.station.StationDetailActivity">
+        </activity>
     </application>
 
 </manifest>

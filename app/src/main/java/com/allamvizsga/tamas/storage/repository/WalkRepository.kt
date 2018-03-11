@@ -29,10 +29,10 @@ class WalkRepository(private val databaseReference: DatabaseReference) {
      * Method will return a Walk by id and the whole Station list
      */
     fun getById(id: String): Single<Walk> =
-        Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
-            walk.stations = stations
-            walk
-        })
+            Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
+                walk.stations = stations
+                walk
+            })
 
     private fun getStationsByWalkId(id: String): Single<List<Station>> = Single.create { emitter ->
         databaseReference.let { databaseReference ->
