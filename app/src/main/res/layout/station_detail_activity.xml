@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 
     <!--suppress AndroidUnknownAttribute -->
     <data class=".StationDetailBinding">
@@ -10,16 +10,37 @@
 
     <android.support.constraint.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".feature.station.StationDetailActivity">
 
-        <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"/>
+
+        <ImageView
+                android:id="@+id/button"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_width="@dimen/default_view_size"
                 android:onClick="@{() -> viewModel.onButtonClicked()}"
                 android:src="@{viewModel.fabResource}"
-                android:layout_height="wrap_content"/>
+                tools:src="@drawable/ic_play_arrow_black_24dp"
+                android:layout_height="@dimen/default_view_size"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="ContentDescription"/>
+
+        <SeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="0dp"
+                android:progress="@{viewModel.progressPosition}"
+                android:layout_height="wrap_content"
+                android:max="@{viewModel.maxProgress}"
+                android:onProgressChanged="@{(view, progress, fromUser) -> viewModel.onProgressChanged(progress, fromUser)}"
+                app:layout_constraintStart_toEndOf="@+id/button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/button"
+                app:layout_constraintTop_toTopOf="@+id/button"/>
 
     </android.support.constraint.ConstraintLayout>
 

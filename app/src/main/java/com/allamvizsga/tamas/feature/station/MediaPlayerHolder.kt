@@ -5,15 +5,18 @@ import android.media.MediaPlayer
 class MediaPlayerHolder(audioUrl: String) {
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
+    lateinit var onPreparedListener: (duration: Int) -> Unit
+    lateinit var onCompletedListener: () -> Unit
 
     init {
         mediaPlayer.setDataSource(audioUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            play()
+            onPreparedListener.invoke(mediaPlayer.duration)
         }
         mediaPlayer.setOnCompletionListener {
-            release()
+            mediaPlayer.reset()
+            onCompletedListener.invoke()
         }
     }
 
@@ -29,6 +32,10 @@ class MediaPlayerHolder(audioUrl: String) {
         }
     }
 
+    fun seekTo(position: Int) {
+        mediaPlayer.seekTo(position)
+    }
+
     fun release() {
         mediaPlayer.release()
     }
@@ -40,4 +47,6 @@ class MediaPlayerHolder(audioUrl: String) {
             false
         }
     }
+
+    fun getCurrentPosition() = mediaPlayer.currentPosition
 }

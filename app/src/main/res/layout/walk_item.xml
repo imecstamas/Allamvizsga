@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <!--suppress AndroidUnknownAttribute -->
     <data class=".WalkItemBinding">
@@ -27,7 +27,6 @@
                     android:scaleType="centerCrop"
                     android:transitionName="@string/image_transition"
                     android:layout_height="0dp"
-                    android:contentDescription="@string/walk_image_content_description"
                     android:src="@{viewModel.walk.imageUrl}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +34,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/description_text_view"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintDimensionRatio="16:9"
-                    tools:src="@mipmap/ic_launcher"/>
+                    tools:src="@mipmap/ic_launcher"
+                    tools:ignore="ContentDescription"/>
 
             <TextView
                     android:id="@+id/title_text_view"

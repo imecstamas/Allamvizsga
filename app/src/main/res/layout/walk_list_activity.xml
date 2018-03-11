@@ -11,12 +11,8 @@
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:elevation="@dimen/appbar_elevation"
-                android:layout_height="?actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:background="?colorPrimary"
-                app:title="@string/walks"/>
+                app:title="@string/walks"
+                style="@style/Toolbar"/>
 
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"

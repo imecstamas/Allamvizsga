@@ -5,4 +5,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="base_line">8dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="default_view_size">48dp</dimen>
 </resources>
