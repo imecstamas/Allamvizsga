@@ -4,13 +4,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.allamvizsga.tamas.MainActivity
 import com.allamvizsga.tamas.R
+import com.allamvizsga.tamas.feature.station.StationDetailActivity
+import com.allamvizsga.tamas.model.Station
 
 object NotificationHelper {
 
@@ -18,7 +19,7 @@ object NotificationHelper {
      * Posts a notification in the notification bar when a transition is detected.
      * If the user clicks the notification, control goes to the MainActivity.
      */
-    fun sendNotification(context: Context, notificationDetails: String) {
+    fun sendNotification(context: Context, station: Station) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Android O requires a Notification Channel.
@@ -27,7 +28,7 @@ object NotificationHelper {
         }
 
         // Create an explicit content Intent that starts the main Activity.
-        val notificationIntent = Intent(context.applicationContext, MainActivity::class.java)
+        val notificationIntent = StationDetailActivity.getStartIntent(context.applicationContext, station.id!!)
         // Construct a task stack.
         val stackBuilder = TaskStackBuilder.create(context)
         // Add the main Activity to the task stack as the parent.
@@ -38,12 +39,10 @@ object NotificationHelper {
         // Get a PendingIntent containing the entire back stack.
         val notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        //TODO send the station id in the notification
-
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColor(Color.RED)
-                .setContentTitle(notificationDetails)
+                .setContentTitle(station.title)
                 .setContentIntent(notificationPendingIntent)
                 .setChannelId(CHANNEL_ID) // Used only on Android O
                 .setAutoCancel(true)

@@ -3,7 +3,10 @@
           package="com.allamvizsga.tamas">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Needed for the Fence Api -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- Needed for the JobIntentService on API levels lower then Oreo -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
             android:name=".AllamvizsgaApplication"
@@ -30,14 +33,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".feature.walk.list.WalkListActivity"/>
-        <activity android:name=".feature.walk.detail.WalkDetailActivity"/>
+        <activity android:name=".feature.walk.detail.WalkDetailActivity"
+                  android:theme="@style/AppTheme.WalkDetail"/>
+        <activity android:name=".feature.station.StationDetailActivity"/>
 
         <receiver
                 android:name=".component.FenceReceiver"
                 android:enabled="true"/>
 
-        <activity android:name=".feature.station.StationDetailActivity">
-        </activity>
+        <service android:name=".component.FenceJobIntentService"
+                 android:permission="android.permission.BIND_JOB_SERVICE"/>
+
     </application>
 
 </manifest>

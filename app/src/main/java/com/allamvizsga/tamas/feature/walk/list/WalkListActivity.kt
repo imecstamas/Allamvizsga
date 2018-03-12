@@ -23,7 +23,7 @@ class WalkListActivity : BaseActivity() {
             recyclerView.adapter = adapter
         }
         adapter.setItemClickListener { view, position ->
-            startActivityWithTransition(WalkDetailActivity.getStartIntent(this, adapter.walks[position].id!!, adapter.walks[position].imageUrl), view.findViewById<ImageView>(R.id.image_view))
+            startActivityWithTransition(WalkDetailActivity.getStartIntent(this, adapter.walks[position]), view.findViewById<ImageView>(R.id.image_view))
         }
         getViewModel<WalkListViewModel>().walks.observe(this) { walks ->
             walks?.let {

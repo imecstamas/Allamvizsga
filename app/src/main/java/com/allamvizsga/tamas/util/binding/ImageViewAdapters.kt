@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
  * Created by tamas on 1/22/18.
  */
 @BindingAdapter("android:src")
-fun ImageView.setImageSource(url: String) {
+fun ImageView.setImageSource(url: String?) {
     Glide.with(this).load(url).into(this)
 }
 
