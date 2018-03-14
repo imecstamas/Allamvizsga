@@ -20,9 +20,11 @@ class FenceJobIntentService : JobIntentService() {
             stationRepository.getById(fenceState.fenceKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { station ->
-                        NotificationHelper.sendNotification(this, station)
-                    }
+                    .subscribe({ station ->
+                        NotificationHelper.sendNotification(this, station = station)
+                    }, {
+                        NotificationHelper.sendNotification(this, stationId = fenceState.fenceKey)
+                    })
         }
     }
 

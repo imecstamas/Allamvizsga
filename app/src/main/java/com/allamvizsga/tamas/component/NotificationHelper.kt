@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
@@ -19,7 +20,7 @@ object NotificationHelper {
      * Posts a notification in the notification bar when a transition is detected.
      * If the user clicks the notification, control goes to the MainActivity.
      */
-    fun sendNotification(context: Context, station: Station) {
+    fun sendNotification(context: Context, station: Station? = null, stationId: String? = null) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Android O requires a Notification Channel.
@@ -28,7 +29,11 @@ object NotificationHelper {
         }
 
         // Create an explicit content Intent that starts the main Activity.
-        val notificationIntent = StationDetailActivity.getStartIntent(context.applicationContext, station.id!!)
+        val notificationIntent = when {
+            station != null -> StationDetailActivity.getStartIntent(context.applicationContext, station = station)
+            stationId != null -> StationDetailActivity.getStartIntent(context.applicationContext, stationId = stationId)
+            else -> Intent(context.applicationContext, MainActivity::class.java)
+        }
         // Construct a task stack.
         val stackBuilder = TaskStackBuilder.create(context)
         // Add the main Activity to the task stack as the parent.
@@ -42,7 +47,7 @@ object NotificationHelper {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setColor(Color.RED)
-                .setContentTitle(station.title)
+                .setContentTitle(station?.title)
                 .setContentIntent(notificationPendingIntent)
                 .setChannelId(CHANNEL_ID) // Used only on Android O
                 .setAutoCancel(true)

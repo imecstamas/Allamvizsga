@@ -3,6 +3,7 @@ package com.allamvizsga.tamas.feature.station
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableInt
 import com.allamvizsga.tamas.R
+import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.storage.repository.StationRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,11 +26,15 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ station ->
-                    audioUrl = station.audioUrl
-                    initPlayer(station.audioUrl)
+                    initStation(station)
                 }, {
                     it.printStackTrace()
                 })
+    }
+
+    fun initStation(station: Station) {
+        audioUrl = station.audioUrl
+        initPlayer(station.audioUrl)
     }
 
     private fun initPlayer(audioUrl: String, playIfReady: Boolean = false) {

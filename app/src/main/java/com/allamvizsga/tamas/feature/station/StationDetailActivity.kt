@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.StationDetailBinding
+import com.allamvizsga.tamas.model.Station
 import org.koin.android.architecture.ext.getViewModel
 
 class StationDetailActivity : AppCompatActivity() {
@@ -14,8 +15,14 @@ class StationDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<StationDetailBinding>(this, R.layout.station_detail_activity).apply {
-            viewModel = getViewModel<StationViewModel>().also {
-                it.getStationById(intent.getStringExtra(STATION_ID))
+            viewModel = getViewModel<StationViewModel>().also { viewModel ->
+                intent.getParcelableExtra<Station>(STATION).let { station ->
+                    if (station != null) {
+                        viewModel.initStation(station)
+                    } else {
+                        viewModel.getStationById(intent.getStringExtra(STATION_ID))
+                    }
+                }
             }
         }
     }
@@ -23,8 +30,9 @@ class StationDetailActivity : AppCompatActivity() {
     companion object {
 
         private const val STATION_ID = "station_id"
+        private const val STATION = "station"
 
-        fun getStartIntent(context: Context, id: String): Intent =
-                Intent(context, StationDetailActivity::class.java).putExtra(STATION_ID, id)
+        fun getStartIntent(context: Context, station: Station? = null, stationId: String? = null): Intent =
+                Intent(context, StationDetailActivity::class.java).putExtra(STATION_ID, stationId).putExtra(STATION, station)
     }
 }
