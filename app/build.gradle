@@ -48,9 +48,9 @@ dependencies {
         transitive = true
     }
     // Firebase
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.google.firebase:firebase-database:11.8.0'
-    implementation 'com.google.android.gms:play-services-awareness:11.8.0'
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-database:$firebase_version"
+    implementation "com.google.android.gms:play-services-awareness:$firebase_version"
     // Rx
     implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
@@ -60,6 +60,13 @@ dependencies {
     implementation "org.koin:koin-android-architecture:$koin_version"
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.6.1'
+    // Estimote Beacons
+    implementation 'com.estimote:proximity-sdk:0.4.1'
+
+    implementation 'com.halcyonmobile.support:statelayout:1.0.4.3.00.1'
+    implementation 'com.halcyonmobile.support:progressbar:1.1.2'
+    implementation 'com.halcyonmobile.support:databinding:0.1.0.5'
+
     kapt "com.android.databinding:compiler:$gradleVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

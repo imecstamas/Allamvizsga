@@ -9,8 +9,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.WalkList">
+        <!--<item name="android:windowExitTransition">@android:transition/explode</item>-->
+    </style>
+
     <style name="AppTheme.WalkDetail">
+        <item name="android:windowSharedElementsUseOverlay">false</item>
         <item name="android:windowEnterTransition">@transition/walk_detail_enter</item>
+        <item name="android:windowReturnTransition">@android:transition/slide_bottom</item>
     </style>
 
 </resources>

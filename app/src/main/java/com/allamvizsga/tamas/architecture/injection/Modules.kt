@@ -10,9 +10,9 @@ import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.applicationContext
 
 val dataBaseReferenceModule = applicationContext {
-    provide { FirebaseDatabase.getInstance().reference }
-    provide { WalkRepository(get()) }
-    provide { StationRepository(get()) }
+    bean { FirebaseDatabase.getInstance().reference }
+    bean { WalkRepository(get()) }
+    bean { StationRepository(get()) }
 }
 
 val viewModelModule = applicationContext {

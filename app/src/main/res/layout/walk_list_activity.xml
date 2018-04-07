@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  tools:context=".feature.walk.list.WalkListActivity">
+    <data>
+
+        <variable name="viewModel" type="com.allamvizsga.tamas.feature.walk.list.WalkListViewModel"/>
+
+    </data>
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".feature.walk.list.WalkListActivity">
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:title="@string/walks"
                 style="@style/Toolbar"/>
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+        <com.halcyonmobile.statelayout.StateLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:hasFixedSize="@{true}"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/walk_item"/>
+                app:layout_loading="@layout/view_loading"
+                app:layout_error="@layout/view_error"
+                app:state="@{viewModel.screenState}"
+                android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:hasFixedSize="@{true}"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    tools:listitem="@layout/walk_item"/>
+
+        </com.halcyonmobile.statelayout.StateLayout>
 
     </LinearLayout>
 

@@ -19,16 +19,21 @@ class WalkListActivity : BaseActivity() {
         val adapter = WalkListAdapter()
         DataBindingUtil.setContentView<WalkListActivityBinding>(this, R.layout.walk_list_activity).apply {
             setUpToolbar(toolbar)
+            viewModel = getViewModel<WalkListViewModel>().apply {
+                walks.observe(this@WalkListActivity) { walks ->
+                    walks?.let {
+                        adapter.walks = it
+                    }
+                }
+            }
             recyclerView.addItemDecoration(ItemSpaceDecorator(this@WalkListActivity, R.dimen.base_line))
             recyclerView.adapter = adapter
         }
         adapter.setItemClickListener { view, position ->
-            startActivityWithTransition(WalkDetailActivity.getStartIntent(this, adapter.walks[position]), view.findViewById<ImageView>(R.id.image_view))
-        }
-        getViewModel<WalkListViewModel>().walks.observe(this) { walks ->
-            walks?.let {
-                adapter.walks = it
-            }
+            startActivityWithTransition(
+                WalkDetailActivity.getStartIntent(this, adapter.walks[position]),
+                view.findViewById<ImageView>(R.id.image_view)
+            )
         }
     }
 }

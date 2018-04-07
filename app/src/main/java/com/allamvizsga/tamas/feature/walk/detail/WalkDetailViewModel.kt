@@ -13,6 +13,7 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
     private var disposable: Disposable? = null
 
     val walk = MutableLiveData<Walk>()
+    val startEnabled get() = walk.value != null
 
     fun getWalkDetail(walkId: String) {
         disposable = walkRepository.getById(walkId)
