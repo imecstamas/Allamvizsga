@@ -30,8 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".feature.walk.list.WalkListActivity"
-                  android:theme="@style/AppTheme.WalkList"/>
+        <activity android:name=".feature.walk.list.WalkListActivity"/>
         <activity android:name=".feature.walk.detail.WalkDetailActivity"
                   android:theme="@style/AppTheme.WalkDetail"/>
         <activity android:name=".feature.station.StationDetailActivity"/>

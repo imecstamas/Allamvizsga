@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 app:layout_loading="@layout/view_loading"
                 app:layout_error="@layout/view_error"
+                app:layout_empty="@layout/view_empty"
                 app:state="@{viewModel.screenState}"
                 android:layout_height="match_parent">
 

@@ -14,32 +14,32 @@
     <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:transitionGroup="false"
-            android:clipChildren="false"
+            android:animateLayoutChanges="true"
             android:layout_height="match_parent"
             tools:context=".feature.walk.detail.WalkDetailActivity">
 
         <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:transitionGroup="false"
-                android:clipChildren="false"
                 android:id="@+id/appbar"
-                android:layout_height="wrap_content">
+                android:layout_height="200dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:transitionGroup="false"
-                    android:clipChildren="false"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:title="@{viewModel.walk.title}"
+                    app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.White"
                     app:contentScrim="?attr/colorPrimary"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                 <!-- Load the image from code in order to be able to postpone enter transition -->
                 <ImageView
                         android:layout_width="match_parent"
                         app:layout_collapseMode="parallax"
+                        android:scaleType="centerCrop"
                         android:transitionName="@string/image_transition"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:id="@+id/image_view"
                         tools:ignore="ContentDescription"/>
 
@@ -47,7 +47,6 @@
                         android:id="@+id/toolbar"
                         app:layout_collapseMode="pin"
                         android:layout_width="match_parent"
-                        android:elevation="@dimen/appbar_elevation"
                         android:layout_height="?actionBarSize"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -62,6 +61,8 @@
             <TextView
                     android:id="@+id/description"
                     android:text="@{viewModel.walk.description}"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:padding="@dimen/base_line"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
@@ -72,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:enabled="@{viewModel.startEnabled}"
                 android:src="@drawable/ic_play_arrow_black_24dp"
+                android:visibility="gone"
                 app:layout_anchor="@id/appbar"
                 app:layout_anchorGravity="bottom|right|end"
                 android:layout_height="wrap_content"/>

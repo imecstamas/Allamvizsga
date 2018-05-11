@@ -23,8 +23,12 @@ class WalkListViewModel(walkRepository: WalkRepository) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ walks ->
-                _walks.value = walks
-                screenState.set(StateLayout.State.NORMAL)
+                if (walks.isEmpty()) {
+                    screenState.set(StateLayout.State.EMPTY)
+                } else {
+                    _walks.value = walks
+                    screenState.set(StateLayout.State.NORMAL)
+                }
             }, { error ->
                 error.printStackTrace()
                 screenState.set(StateLayout.State.ERROR)

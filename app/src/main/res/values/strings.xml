@@ -3,4 +3,5 @@
     <string name="walks">Walks</string>
     <string name="walk_image_content_description">Walk image</string>
     <string name="there_was_a_problem_downloading_the_content">There was a problem downloading the content.</string>
+    <string name="there_is_no_content_to_load">There is no content to load.</string>
 </resources>

@@ -10,6 +10,9 @@ import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.app.SharedElementCallback
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import com.allamvizsga.tamas.R
@@ -35,6 +38,7 @@ import org.koin.android.architecture.ext.getViewModel
 class WalkDetailActivity : BaseActivity() {
 
     private var pendingIntent: PendingIntent? = null
+    private lateinit var binding: WalkDetailActivityBinding
     private lateinit var viewModel: WalkDetailViewModel
 
     private var observationHandler: ProximityObserver.Handler? = null
@@ -42,42 +46,56 @@ class WalkDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
-        DataBindingUtil.setContentView<WalkDetailActivityBinding>(this, R.layout.walk_detail_activity).also { binding ->
-            binding.setLifecycleOwner(this)
-            viewModel = getViewModel<WalkDetailViewModel>().also { viewModel ->
-                intent.getParcelableExtra<Walk>(WALK).also { walk ->
-                    walk.id?.let {
-                        viewModel.getWalkDetail(it)
-                    }
-                    viewModel.walk.value = walk
-                    scheduleStartPostponeEnterTransitionOnLoad(binding.imageView, walk.imageUrl)
+        binding = DataBindingUtil.setContentView(this, R.layout.walk_detail_activity)
+        binding.setLifecycleOwner(this)
+        viewModel = getViewModel<WalkDetailViewModel>().also { viewModel ->
+            intent.getParcelableExtra<Walk>(WALK).also { walk ->
+                walk.id?.let {
+                    viewModel.getWalkDetail(it)
                 }
-            }
-
-            binding.viewModel = viewModel
-            setUpToolbar(binding.toolbar)
-            binding.button.setOnClickListener {
-                //                startActivity(StationDetailActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0].id!!))
-                runWithPermission(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    LOCATION_PERMISSION_REQUEST_CODE,
-                    ::registerLocationFence,
-                    ::showPermissionRationale
-                )
-                //Check if the Bluetooth is enabled or not
-                BluetoothAdapter.getDefaultAdapter()?.let {
-                    if (it.isEnabled) {
-                        registerBeacons()
-                    } else {
-                        startActivityForResult(
-                            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                            BLUETOOTH_ENABLE_REQUEST_CODE
-                        )
-                    }
-                }
+                viewModel.walk.value = walk
+                scheduleStartPostponeEnterTransitionOnLoad(binding.imageView, walk.imageUrl)
             }
         }
 
+        binding.viewModel = viewModel
+        setUpToolbar(binding.toolbar)
+        binding.button.setOnClickListener {
+            //                startActivity(StationDetailActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0].id!!))
+            runWithPermission(
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                LOCATION_PERMISSION_REQUEST_CODE,
+                ::registerLocationFence,
+                ::showPermissionRationale
+            )
+            //Check if the Bluetooth is enabled or not
+            BluetoothAdapter.getDefaultAdapter()?.let {
+                if (it.isEnabled) {
+                    registerBeacons()
+                } else {
+                    startActivityForResult(
+                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                        BLUETOOTH_ENABLE_REQUEST_CODE
+                    )
+                }
+            }
+        }
+        setEnterSharedElementCallback(object : SharedElementCallback() {
+            override fun onSharedElementEnd(
+                sharedElementNames: MutableList<String>?,
+                sharedElements: MutableList<View>?,
+                sharedElementSnapshots: MutableList<View>?
+            ) {
+                Handler().postDelayed({
+                    binding.button.show()
+                }, 800)
+            }
+        })
+    }
+
+    override fun supportFinishAfterTransition() {
+        binding.button.visibility = View.GONE
+        super.supportFinishAfterTransition()
     }
 
     private fun getPendingIntent() = pendingIntent
