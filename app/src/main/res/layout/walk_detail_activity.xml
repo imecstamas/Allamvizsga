@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:transitionGroup="false"
             android:animateLayoutChanges="true"
+            app:snackbarState="@{viewModel.snackbarState}"
             android:layout_height="match_parent"
             tools:context=".feature.walk.detail.WalkDetailActivity">
 

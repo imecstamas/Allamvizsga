@@ -9,8 +9,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.Settings
 import android.support.v4.app.SharedElementCallback
 import android.view.View
 import android.widget.ImageView
@@ -20,6 +22,7 @@ import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Walk
+import com.allamvizsga.tamas.util.extension.observe
 import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import com.bumptech.glide.Glide
@@ -56,6 +59,12 @@ class WalkDetailActivity : BaseActivity() {
                 viewModel.walk.value = walk
                 scheduleStartPostponeEnterTransitionOnLoad(binding.imageView, walk.imageUrl)
             }
+        }
+        viewModel.openSettings.observe(this) {
+            startActivity(Intent().apply {
+                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                data = Uri.fromParts("package", packageName, null)
+            })
         }
 
         binding.viewModel = viewModel
@@ -109,7 +118,7 @@ class WalkDetailActivity : BaseActivity() {
             }
 
     private fun showPermissionRationale() {
-        TODO("Show permission rationale!")
+        viewModel.snackbarState.build()
     }
 
     @SuppressLint("MissingPermission")

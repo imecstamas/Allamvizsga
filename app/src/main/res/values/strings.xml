@@ -4,4 +4,8 @@
     <string name="walk_image_content_description">Walk image</string>
     <string name="there_was_a_problem_downloading_the_content">There was a problem downloading the content.</string>
     <string name="there_is_no_content_to_load">There is no content to load.</string>
+    <string name="location_permission_rationale">The permission is needed to show notifications when you reach one of
+        the locations.
+    </string>
+    <string name="settings">Settings</string>
 </resources>
