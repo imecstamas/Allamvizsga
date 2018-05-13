@@ -17,11 +17,11 @@ import android.support.v4.app.SharedElementCallback
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Walk
+import com.allamvizsga.tamas.storage.preference.SharedPreferencesManager
 import com.allamvizsga.tamas.util.extension.observe
 import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.allamvizsga.tamas.util.extension.setUpToolbar
@@ -37,12 +37,14 @@ import com.google.android.gms.awareness.Awareness
 import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import com.google.android.gms.awareness.fence.LocationFence
 import org.koin.android.architecture.ext.getViewModel
+import org.koin.android.ext.android.inject
 
 class WalkDetailActivity : BaseActivity() {
 
     private var pendingIntent: PendingIntent? = null
     private lateinit var binding: WalkDetailActivityBinding
     private lateinit var viewModel: WalkDetailViewModel
+    private val sharedPrefs: SharedPreferencesManager by inject()
 
     private var observationHandler: ProximityObserver.Handler? = null
 
@@ -123,16 +125,27 @@ class WalkDetailActivity : BaseActivity() {
 
     @SuppressLint("MissingPermission")
     private fun registerLocationFence() {
+        // Unregister previously registered fences
+        val updateBuilder = FenceUpdateRequest.Builder()
+        sharedPrefs.getRegisteredFenceKeys()?.forEach {
+            updateBuilder.removeFence(it)
+        }
+
+        // Register new fences
         val builder = FenceUpdateRequest.Builder()
 
+        val registeredFenceKeys: MutableSet<String?> = mutableSetOf()
         viewModel.walk.value?.stations?.forEach { station ->
             station.coordinate.apply {
+                registeredFenceKeys.add(station.id)
                 builder.addFence(station.id, LocationFence.entering(latitude, longitude, RADIUS), getPendingIntent())
             }
         }
+        sharedPrefs.saveRegisteredFenceKeys(registeredFenceKeys)
 
         Awareness.getFenceClient(this).updateFences(builder.build())
             .addOnSuccessListener {
+                viewModel.fenceRegistrationSuccess()
                 Toast.makeText(this, "Success Location", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
@@ -165,6 +178,7 @@ class WalkDetailActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        //TODO check if we want to stop here the observation
         observationHandler?.stop()
         super.onDestroy()
     }

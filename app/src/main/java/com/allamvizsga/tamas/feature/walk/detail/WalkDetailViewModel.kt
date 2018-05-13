@@ -2,8 +2,8 @@ package com.allamvizsga.tamas.feature.walk.detail
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableInt
 import android.view.View
-import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.feature.shared.SnackbarState
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
@@ -16,6 +16,7 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
 
     private var disposable: Disposable? = null
 
+    var buttonIconRes = ObservableInt(R.drawable.ic_play_arrow_black_24dp)
     val walk = MutableLiveData<Walk>()
     val startEnabled get() = walk.value != null
     val openSettings = SingleLiveEvent<Any>()
@@ -33,6 +34,10 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
             }, {
                 it.printStackTrace()
             })
+    }
+
+    fun fenceRegistrationSuccess() {
+        buttonIconRes.set(R.drawable.ic_stop_black_24dp)
     }
 
     override fun onCleared() {

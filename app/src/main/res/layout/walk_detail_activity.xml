@@ -73,7 +73,7 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:enabled="@{viewModel.startEnabled}"
-                android:src="@drawable/ic_play_arrow_black_24dp"
+                android:src="@{viewModel.buttonIconRes}"
                 android:visibility="gone"
                 app:layout_anchor="@id/appbar"
                 app:layout_anchorGravity="bottom|right|end"
