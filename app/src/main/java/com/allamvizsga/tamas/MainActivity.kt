@@ -1,11 +1,9 @@
 package com.allamvizsga.tamas
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.allamvizsga.tamas.databinding.ActivityMainBinding
-import com.allamvizsga.tamas.feature.walk.list.WalkListActivity
 import com.allamvizsga.tamas.model.Coordinate
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.model.Walk
@@ -55,10 +53,6 @@ class MainActivity : AppCompatActivity() {
                                 )
                         )
                 )
-            }
-
-            walksButton.setOnClickListener {
-                startActivity(Intent(this@MainActivity, WalkListActivity::class.java))
             }
         }
     }

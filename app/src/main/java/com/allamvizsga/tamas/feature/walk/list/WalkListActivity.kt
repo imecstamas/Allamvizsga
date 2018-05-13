@@ -1,8 +1,10 @@
 package com.allamvizsga.tamas.feature.walk.list
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.widget.ImageView
+import com.allamvizsga.tamas.MainActivity
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.databinding.WalkListActivityBinding
 import com.allamvizsga.tamas.feature.shared.BaseActivity
@@ -18,7 +20,7 @@ class WalkListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val adapter = WalkListAdapter()
         DataBindingUtil.setContentView<WalkListActivityBinding>(this, R.layout.walk_list_activity).apply {
-            setUpToolbar(toolbar)
+            setUpToolbar(toolbar, false)
             viewModel = getViewModel<WalkListViewModel>().apply {
                 walks.observe(this@WalkListActivity) { walks ->
                     walks?.let {
@@ -28,6 +30,12 @@ class WalkListActivity : BaseActivity() {
             }
             recyclerView.addItemDecoration(ItemSpaceDecorator(this@WalkListActivity, R.dimen.base_line))
             recyclerView.adapter = adapter
+
+            // setup long click for opening the upload screen
+            toolbar.setOnLongClickListener {
+                startActivity(Intent(this@WalkListActivity, MainActivity::class.java))
+                true
+            }
         }
         adapter.setItemClickListener { view, position ->
             startActivityWithTransition(

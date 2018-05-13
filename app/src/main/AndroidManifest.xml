@@ -23,14 +23,14 @@
                 android:name="com.google.android.awareness.API_KEY"
                 android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".feature.walk.list.WalkListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".feature.walk.list.WalkListActivity"/>
         <activity android:name=".feature.walk.detail.WalkDetailActivity"
                   android:theme="@style/AppTheme.WalkDetail"/>
         <activity android:name=".feature.station.StationDetailActivity"/>

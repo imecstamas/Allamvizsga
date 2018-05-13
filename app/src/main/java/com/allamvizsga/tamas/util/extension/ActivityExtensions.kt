@@ -14,9 +14,9 @@ import android.view.View
 import android.view.Window
 import java.util.*
 
-fun AppCompatActivity.setUpToolbar(toolbar: Toolbar) {
+fun AppCompatActivity.setUpToolbar(toolbar: Toolbar, displayUp: Boolean = true) {
     setSupportActionBar(toolbar)
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayHomeAsUpEnabled(displayUp)
 }
 
 fun AppCompatActivity.startActivityWithTransition(intent: Intent, vararg sharedViews: View?) {
