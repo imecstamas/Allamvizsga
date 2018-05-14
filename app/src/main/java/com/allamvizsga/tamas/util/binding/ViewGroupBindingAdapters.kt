@@ -8,11 +8,11 @@ import com.allamvizsga.tamas.feature.shared.SnackbarState
 @BindingAdapter("snackbarState")
 fun ViewGroup.setSnackbarState(snackbarState: SnackbarState) {
     if (snackbarState.visible) {
-        snackbarState.visible = false
         val snackbar = Snackbar.make(this, snackbarState.messageRes, snackbarState.duration)
         if (snackbarState.actionRes != 0 && snackbarState.action != null) {
             snackbar.setAction(snackbarState.actionRes, snackbarState.action)
         }
         snackbar.show()
+        snackbarState.clear()
     }
 }

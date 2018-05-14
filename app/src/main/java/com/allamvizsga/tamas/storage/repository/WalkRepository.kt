@@ -2,12 +2,16 @@ package com.allamvizsga.tamas.storage.repository
 
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.model.Walk
+import com.allamvizsga.tamas.storage.preference.SharedPreferencesManager
 import com.allamvizsga.tamas.util.extension.observe
 import com.google.firebase.database.DatabaseReference
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
-class WalkRepository(private val databaseReference: DatabaseReference) {
+class WalkRepository(
+    private val databaseReference: DatabaseReference,
+    private val sharedPreferencesManager: SharedPreferencesManager
+) {
 
     /**
      * Method will return all the Walks without the Stations
@@ -29,10 +33,10 @@ class WalkRepository(private val databaseReference: DatabaseReference) {
      * Method will return a Walk by id and the whole Station list
      */
     fun getById(id: String): Single<Walk> =
-            Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
-                walk.stations = stations
-                walk
-            })
+        Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
+            walk.stations = stations
+            walk
+        })
 
     private fun getStationsByWalkId(id: String): Single<List<Station>> = Single.create { emitter ->
         databaseReference.let { databaseReference ->
@@ -81,6 +85,18 @@ class WalkRepository(private val databaseReference: DatabaseReference) {
             stationIds.forEach { child(id).child(STATIONS).child(it).setValue(true) }
         }
     }
+
+    fun saveStartedWalk(walkId: String) {
+        sharedPreferencesManager.saveStartedWalkId(walkId)
+    }
+
+    fun stopWalk() {
+        sharedPreferencesManager.stopWalk()
+    }
+
+    fun getStartedWalkId() = sharedPreferencesManager.getStartedWalkId()
+
+    fun getStartedWalk() = getStartedWalkId()?.let { getById(it) }
 
     companion object {
         private const val WALKS = "walks"

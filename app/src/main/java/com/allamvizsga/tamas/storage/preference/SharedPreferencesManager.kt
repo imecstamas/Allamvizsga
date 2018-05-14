@@ -9,13 +9,17 @@ class SharedPreferencesManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
-    fun getRegisteredFenceKeys(): Set<String?>? = sharedPreferences.getStringSet(REGISTERED_FENCES, null)
-
-    fun saveRegisteredFenceKeys(fenceKeys: Set<String?>) {
-        sharedPreferences.edit().putStringSet(REGISTERED_FENCES, fenceKeys).apply()
+    fun saveStartedWalkId(walkId: String) {
+        sharedPreferences.edit().putString(STARTED_WALK_ID, walkId).apply()
     }
 
+    fun stopWalk() {
+        sharedPreferences.edit().remove(STARTED_WALK_ID).apply()
+    }
+
+    fun getStartedWalkId(): String? = sharedPreferences.getString(STARTED_WALK_ID, null)
+
     companion object {
-        private const val REGISTERED_FENCES = "registered_fences"
+        private const val STARTED_WALK_ID = "started_walk_id"
     }
 }

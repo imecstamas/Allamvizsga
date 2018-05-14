@@ -17,12 +17,12 @@ import android.support.v4.app.SharedElementCallback
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Walk
-import com.allamvizsga.tamas.storage.preference.SharedPreferencesManager
-import com.allamvizsga.tamas.util.extension.observe
+import com.allamvizsga.tamas.storage.repository.WalkRepository
 import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import com.bumptech.glide.Glide
@@ -36,6 +36,8 @@ import com.estimote.proximity_sdk.proximity.ProximityObserverBuilder
 import com.google.android.gms.awareness.Awareness
 import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import com.google.android.gms.awareness.fence.LocationFence
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.koin.android.architecture.ext.getViewModel
 import org.koin.android.ext.android.inject
 
@@ -44,7 +46,7 @@ class WalkDetailActivity : BaseActivity() {
     private var pendingIntent: PendingIntent? = null
     private lateinit var binding: WalkDetailActivityBinding
     private lateinit var viewModel: WalkDetailViewModel
-    private val sharedPrefs: SharedPreferencesManager by inject()
+    private val walkRepository: WalkRepository by inject()
 
     private var observationHandler: ProximityObserver.Handler? = null
 
@@ -62,32 +64,33 @@ class WalkDetailActivity : BaseActivity() {
                 scheduleStartPostponeEnterTransitionOnLoad(binding.imageView, walk.imageUrl)
             }
         }
-        viewModel.openSettings.observe(this) {
-            startActivity(Intent().apply {
-                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                data = Uri.fromParts("package", packageName, null)
-            })
-        }
 
         binding.viewModel = viewModel
         setUpToolbar(binding.toolbar)
         binding.button.setOnClickListener {
-            //                startActivity(StationDetailActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0].id!!))
-            runWithPermission(
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                LOCATION_PERMISSION_REQUEST_CODE,
-                ::registerLocationFence,
-                ::showPermissionRationale
-            )
-            //Check if the Bluetooth is enabled or not
-            BluetoothAdapter.getDefaultAdapter()?.let {
-                if (it.isEnabled) {
-                    registerBeacons()
-                } else {
-                    startActivityForResult(
-                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                        BLUETOOTH_ENABLE_REQUEST_CODE
-                    )
+            if (viewModel.walkAlreadyStarted) {
+                //We need to stop the walk
+                unregisterLocationFence()
+                viewModel.stopWalk()
+            } else {
+                //We need to start the walk
+                //                startActivity(StationDetailActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0].id!!))
+                runWithPermission(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    LOCATION_PERMISSION_REQUEST_CODE,
+                    ::startLocationServices,
+                    ::showPermissionRationale
+                )
+                //Check if the Bluetooth is enabled or not
+                BluetoothAdapter.getDefaultAdapter()?.let {
+                    if (it.isEnabled) {
+                        registerBeacons()
+                    } else {
+                        startActivityForResult(
+                            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                            BLUETOOTH_ENABLE_REQUEST_CODE
+                        )
+                    }
                 }
             }
         }
@@ -109,6 +112,60 @@ class WalkDetailActivity : BaseActivity() {
         super.supportFinishAfterTransition()
     }
 
+    private fun showPermissionRationale() {
+        viewModel.snackbarState.apply {
+            messageRes = R.string.location_permission_rationale
+            actionRes = R.string.settings
+            action = View.OnClickListener {
+                startActivity(Intent().apply {
+                    action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    data = Uri.fromParts("package", packageName, null)
+                })
+            }
+        }.build()
+    }
+
+    //region LOCATION FENCES
+    private fun startLocationServices() {
+        unregisterLocationFence()
+        registerLocationFence()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun registerLocationFence() {
+        // Register new fences
+        val builder = FenceUpdateRequest.Builder()
+
+        viewModel.walk.value?.stations?.forEach { station ->
+            station.coordinate.apply {
+                builder.addFence(station.id, LocationFence.entering(latitude, longitude, RADIUS), getPendingIntent())
+            }
+        }
+
+        Awareness.getFenceClient(this).updateFences(builder.build())
+            .addOnSuccessListener {
+                viewModel.startWalk()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failure Location", Toast.LENGTH_SHORT).show()
+                it.printStackTrace()
+            }
+    }
+
+    /**
+     * Unregister previously registered fences
+     */
+    private fun unregisterLocationFence() {
+        FenceUpdateRequest.Builder().apply {
+            walkRepository.getStartedWalk()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({
+                    it.stations?.forEach {
+                        removeFence(it.id)
+                    }
+                }, {})
+        }
+    }
+
     private fun getPendingIntent() = pendingIntent
             ?: PendingIntent.getBroadcast(
                 this,
@@ -118,41 +175,7 @@ class WalkDetailActivity : BaseActivity() {
             ).also {
                 pendingIntent = it
             }
-
-    private fun showPermissionRationale() {
-        viewModel.snackbarState.build()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun registerLocationFence() {
-        // Unregister previously registered fences
-        val updateBuilder = FenceUpdateRequest.Builder()
-        sharedPrefs.getRegisteredFenceKeys()?.forEach {
-            updateBuilder.removeFence(it)
-        }
-
-        // Register new fences
-        val builder = FenceUpdateRequest.Builder()
-
-        val registeredFenceKeys: MutableSet<String?> = mutableSetOf()
-        viewModel.walk.value?.stations?.forEach { station ->
-            station.coordinate.apply {
-                registeredFenceKeys.add(station.id)
-                builder.addFence(station.id, LocationFence.entering(latitude, longitude, RADIUS), getPendingIntent())
-            }
-        }
-        sharedPrefs.saveRegisteredFenceKeys(registeredFenceKeys)
-
-        Awareness.getFenceClient(this).updateFences(builder.build())
-            .addOnSuccessListener {
-                viewModel.fenceRegistrationSuccess()
-                Toast.makeText(this, "Success Location", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failure Location", Toast.LENGTH_SHORT).show()
-                it.printStackTrace()
-            }
-    }
+    //endregion
 
     private fun registerBeacons() {
         val cloudCredentials = EstimoteCloudCredentials(APP_ID, APP_TOKEN)
@@ -188,9 +211,11 @@ class WalkDetailActivity : BaseActivity() {
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    registerLocationFence()
+                    startLocationServices()
                 } else {
-                    TODO("Denied! Disable functionality")
+                    viewModel.snackbarState.apply {
+                        messageRes = R.string.location_disabled
+                    }.build()
                 }
             }
         }

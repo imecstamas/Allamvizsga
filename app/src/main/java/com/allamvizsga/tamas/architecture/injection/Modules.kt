@@ -12,9 +12,9 @@ import org.koin.dsl.module.applicationContext
 
 val storageModule = applicationContext {
     bean { FirebaseDatabase.getInstance().reference }
-    bean { WalkRepository(get()) }
-    bean { StationRepository(get()) }
     bean { SharedPreferencesManager(get()) }
+    bean { WalkRepository(get(), get()) }
+    bean { StationRepository(get()) }
 }
 
 val viewModelModule = applicationContext {
