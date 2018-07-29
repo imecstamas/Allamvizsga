@@ -1,5 +1,6 @@
 package com.allamvizsga.tamas.feature.walk.detail
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
@@ -15,6 +16,7 @@ import android.os.Handler
 import android.provider.Settings
 import android.support.v4.app.SharedElementCallback
 import android.view.View
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
 import com.allamvizsga.tamas.R
@@ -109,7 +111,7 @@ class WalkDetailActivity : BaseActivity() {
 
     override fun supportFinishAfterTransition() {
         binding.button.visibility = View.GONE
-        super.supportFinishAfterTransition()
+       finish()
     }
 
     private fun showPermissionRationale() {

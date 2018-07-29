@@ -11,7 +11,7 @@
 
     <style name="AppTheme.WalkDetail">
         <item name="android:windowEnterTransition">@transition/walk_detail_enter</item>
-        <item name="android:windowReturnTransition">@android:transition/explode</item>
+        <item name="android:windowReturnTransition">@transition/walk_detail_return</item>
     </style>
 
 </resources>

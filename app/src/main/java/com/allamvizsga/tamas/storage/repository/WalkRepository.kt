@@ -9,8 +9,8 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
 class WalkRepository(
-    private val databaseReference: DatabaseReference,
-    private val sharedPreferencesManager: SharedPreferencesManager
+        private val databaseReference: DatabaseReference,
+        private val sharedPreferencesManager: SharedPreferencesManager
 ) {
 
     /**
@@ -33,10 +33,10 @@ class WalkRepository(
      * Method will return a Walk by id and the whole Station list
      */
     fun getById(id: String): Single<Walk> =
-        Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
-            walk.stations = stations
-            walk
-        })
+            Single.zip(getStationsByWalkId(id), getWalkById(id), BiFunction { stations, walk ->
+                walk.stations = stations
+                walk
+            })
 
     private fun getStationsByWalkId(id: String): Single<List<Station>> = Single.create { emitter ->
         databaseReference.let { databaseReference ->
@@ -44,14 +44,16 @@ class WalkRepository(
                 val stations = mutableListOf<Station>()
                 val size = dataSnapshot.childrenCount
                 dataSnapshot.children.forEach {
-                    databaseReference.child(STATIONS).child(it.key).observe({
-                        stations.add(mapToStation(it))
-                        if (size.toInt() == stations.size) {
-                            emitter.onSuccess(stations)
-                        }
-                    }, { error ->
-                        emitter.onError(error)
-                    })
+                    it.key?.let {
+                        databaseReference.child(STATIONS).child(it).observe({
+                            stations.add(mapToStation(it))
+                            if (size.toInt() == stations.size) {
+                                emitter.onSuccess(stations)
+                            }
+                        }, { error ->
+                            emitter.onError(error)
+                        })
+                    }
                 }
             }, { error ->
                 emitter.onError(error)
@@ -71,18 +73,20 @@ class WalkRepository(
         val stations = walk.stations
 
         val stationIds = mutableListOf<String>()
-        stations?.forEach {
+        stations?.forEach { station ->
             databaseReference.child(STATIONS).apply {
-                val id = push().key
-                child(id).setValue(it)
-                stationIds.add(id)
+                push().key?.let { id ->
+                    child(id).setValue(station)
+                    stationIds.add(id)
+                }
             }
         }
 
         databaseReference.child(WALKS).apply {
-            val id = push().key
-            child(id).setValue(mapEntityToDto(walk))
-            stationIds.forEach { child(id).child(STATIONS).child(it).setValue(true) }
+            push().key?.let { id ->
+                child(id).setValue(mapEntityToDto(walk))
+                stationIds.forEach { child(id).child(STATIONS).child(it).setValue(true) }
+            }
         }
     }
 

@@ -39,8 +39,8 @@ class WalkListActivity : BaseActivity() {
         }
         adapter.setItemClickListener { view, position ->
             startActivityWithTransition(
-                WalkDetailActivity.getStartIntent(this, adapter.walks[position]),
-                view.findViewById<ImageView>(R.id.image_view)
+                    WalkDetailActivity.getStartIntent(this, adapter.walks[position]),
+                    view.findViewById<ImageView>(R.id.image_view)
             )
         }
     }
