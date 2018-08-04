@@ -1,5 +1,7 @@
 package com.allamvizsga.tamas.architecture.injection
 
+import com.allamvizsga.tamas.feature.response.ResponseActivity
+import com.allamvizsga.tamas.feature.response.ResponseViewModel
 import com.allamvizsga.tamas.feature.station.StationViewModel
 import com.allamvizsga.tamas.feature.walk.detail.WalkDetailViewModel
 import com.allamvizsga.tamas.feature.walk.list.WalkListViewModel
@@ -21,4 +23,5 @@ val viewModelModule = applicationContext {
     viewModel { WalkListViewModel(get()) }
     viewModel { WalkDetailViewModel(get()) }
     viewModel { StationViewModel(get()) }
+    viewModel { ResponseViewModel(getProperty(ResponseActivity.CORRECT_ANSWER), getProperty(ResponseActivity.NEXT_STATION)) }
 }

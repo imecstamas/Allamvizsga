@@ -1,6 +1,5 @@
 package com.allamvizsga.tamas.feature.walk.detail
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
@@ -14,14 +13,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.SharedElementCallback
 import android.view.View
-import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
+import com.allamvizsga.tamas.feature.response.ResponseActivity
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
@@ -69,19 +69,22 @@ class WalkDetailActivity : BaseActivity() {
 
         binding.viewModel = viewModel
         setUpToolbar(binding.toolbar)
-        binding.button.setOnClickListener {
+        binding.button.setOnClickListener { view ->
             if (viewModel.walkAlreadyStarted) {
                 //We need to stop the walk
                 unregisterLocationFence()
                 viewModel.stopWalk()
             } else {
                 //We need to start the walk
-                //                startActivity(StationDetailActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0].id!!))
+                //TODO change to quiz game screen, and only after that response
+                ActivityCompat.startActivity(this, ResponseActivity.getStartIntent(this, view, false, viewModel.walk.value!!.stations!![0]), null)
+                overridePendingTransition(0, 0)
+
                 runWithPermission(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    LOCATION_PERMISSION_REQUEST_CODE,
-                    ::startLocationServices,
-                    ::showPermissionRationale
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        LOCATION_PERMISSION_REQUEST_CODE,
+                        ::startLocationServices,
+                        ::showPermissionRationale
                 )
                 //Check if the Bluetooth is enabled or not
                 BluetoothAdapter.getDefaultAdapter()?.let {
@@ -89,8 +92,8 @@ class WalkDetailActivity : BaseActivity() {
                         registerBeacons()
                     } else {
                         startActivityForResult(
-                            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                            BLUETOOTH_ENABLE_REQUEST_CODE
+                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                                BLUETOOTH_ENABLE_REQUEST_CODE
                         )
                     }
                 }
@@ -98,9 +101,9 @@ class WalkDetailActivity : BaseActivity() {
         }
         setEnterSharedElementCallback(object : SharedElementCallback() {
             override fun onSharedElementEnd(
-                sharedElementNames: MutableList<String>?,
-                sharedElements: MutableList<View>?,
-                sharedElementSnapshots: MutableList<View>?
+                    sharedElementNames: MutableList<String>?,
+                    sharedElements: MutableList<View>?,
+                    sharedElementSnapshots: MutableList<View>?
             ) {
                 Handler().postDelayed({
                     binding.button.show()
@@ -111,7 +114,7 @@ class WalkDetailActivity : BaseActivity() {
 
     override fun supportFinishAfterTransition() {
         binding.button.visibility = View.GONE
-       finish()
+        finish()
     }
 
     private fun showPermissionRationale() {
@@ -145,13 +148,13 @@ class WalkDetailActivity : BaseActivity() {
         }
 
         Awareness.getFenceClient(this).updateFences(builder.build())
-            .addOnSuccessListener {
-                viewModel.startWalk()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failure Location", Toast.LENGTH_SHORT).show()
-                it.printStackTrace()
-            }
+                .addOnSuccessListener {
+                    viewModel.startWalk()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failure Location", Toast.LENGTH_SHORT).show()
+                    it.printStackTrace()
+                }
     }
 
     /**
@@ -160,20 +163,20 @@ class WalkDetailActivity : BaseActivity() {
     private fun unregisterLocationFence() {
         FenceUpdateRequest.Builder().apply {
             walkRepository.getStartedWalk()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe({
-                    it.stations?.forEach {
-                        removeFence(it.id)
-                    }
-                }, {})
+                    ?.subscribe({
+                        it.stations?.forEach {
+                            removeFence(it.id)
+                        }
+                    }, {})
         }
     }
 
     private fun getPendingIntent() = pendingIntent
             ?: PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent(this, FenceReceiver::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                    this,
+                    0,
+                    Intent(this, FenceReceiver::class.java),
+                    PendingIntent.FLAG_UPDATE_CURRENT
             ).also {
                 pendingIntent = it
             }
@@ -182,22 +185,22 @@ class WalkDetailActivity : BaseActivity() {
     private fun registerBeacons() {
         val cloudCredentials = EstimoteCloudCredentials(APP_ID, APP_TOKEN)
         val proximityObserver = ProximityObserverBuilder(applicationContext, cloudCredentials)
-            .withBalancedPowerMode()
-            .withOnErrorAction { /* handle errors here */ }
-            .build()
+                .withBalancedPowerMode()
+                .withOnErrorAction { /* handle errors here */ }
+                .build()
 
 
         // Kotlin
         val venueZone = proximityObserver.zoneBuilder()
-            .forAttachmentKeyAndValue("location", "halcyon")
-            .inFarRange()
-            .withOnEnterAction {
-                Toast.makeText(this, "Bent vagy!", Toast.LENGTH_SHORT).show()
-            }
-            .withOnExitAction {
-                Toast.makeText(this, "Kint vagy!", Toast.LENGTH_SHORT).show()
-            }
-            .create()
+                .forAttachmentKeyAndValue("location", "halcyon")
+                .inFarRange()
+                .withOnEnterAction {
+                    Toast.makeText(this, "Bent vagy!", Toast.LENGTH_SHORT).show()
+                }
+                .withOnExitAction {
+                    Toast.makeText(this, "Kint vagy!", Toast.LENGTH_SHORT).show()
+                }
+                .create()
 
         observationHandler = proximityObserver.addProximityZone(venueZone).start()
     }
@@ -236,18 +239,18 @@ class WalkDetailActivity : BaseActivity() {
     private fun scheduleStartPostponeEnterTransitionOnLoad(imageView: ImageView, url: String) {
         Glide.with(imageView).load(url).listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
-                e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean
+                    e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean
             ): Boolean {
                 startPostponedEnterTransition()
                 return true
             }
 
             override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
             ): Boolean {
                 startPostponedEnterTransition()
                 return false
@@ -267,6 +270,6 @@ class WalkDetailActivity : BaseActivity() {
         private const val WALK = "walk"
 
         fun getStartIntent(context: Context, walk: Walk): Intent =
-            Intent(context, WalkDetailActivity::class.java).putExtra(WALK, walk)
+                Intent(context, WalkDetailActivity::class.java).putExtra(WALK, walk)
     }
 }

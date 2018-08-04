@@ -6,7 +6,7 @@ buildscript {
     ext.architecture_components_version = '1.1.1'
     ext.firebase_version = '16.0.1'
     ext.koin_version = '0.9.3'
-    ext.gradleVersion='3.2.0-beta04'
+    ext.gradleVersion='3.2.0-beta05'
     repositories {
         google()
         jcenter()

@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.allamvizsga.tamas">
+    package="com.allamvizsga.tamas">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Needed for the Fence Api -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Needed for the Fence Api, specifically for Beacons -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- Needed for the JobIntentService on API levels lower then Oreo -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-            android:name=".AllamvizsgaApplication"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-
+        android:name=".AllamvizsgaApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <meta-data
-                android:name="com.google.android.awareness.API_KEY"
-                android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM"/>
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM" />
 
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <activity android:name=".feature.walk.list.WalkListActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.walk.detail.WalkDetailActivity"
-                  android:theme="@style/AppTheme.WalkDetail"/>
-        <activity android:name=".feature.station.StationDetailActivity"/>
+        <activity
+            android:name=".feature.walk.detail.WalkDetailActivity"
+            android:theme="@style/AppTheme.WalkDetail" />
+
+        <activity android:name=".feature.station.StationDetailActivity" />
+
+        <activity
+            android:name=".feature.response.ResponseActivity"
+            android:theme="@style/AppTheme.Transparent" />
 
         <receiver
-                android:name=".component.FenceReceiver"
-                android:enabled="true"/>
+            android:name=".component.FenceReceiver"
+            android:enabled="true" />
 
-        <service android:name=".component.FenceJobIntentService"
-                 android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".component.FenceJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 
