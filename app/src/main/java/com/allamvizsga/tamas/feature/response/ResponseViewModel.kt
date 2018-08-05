@@ -5,9 +5,13 @@ import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import com.allamvizsga.tamas.R
+import com.allamvizsga.tamas.feature.shared.SnackbarState
 import com.allamvizsga.tamas.model.Station
+import com.allamvizsga.tamas.storage.repository.StationRepository
 
-class ResponseViewModel(correctAnswer: Boolean, val station: Station) : ViewModel() {
+class ResponseViewModel(correctAnswer: Boolean, val station: Station, private val stationRepository: StationRepository) : ViewModel() {
+
+    val snackbarState = SnackbarState()
 
     @DrawableRes
     val icon = if (correctAnswer) {
@@ -31,4 +35,13 @@ class ResponseViewModel(correctAnswer: Boolean, val station: Station) : ViewMode
     }
 
     val navigateButtonEnabled = correctAnswer
+
+    fun saveRegisteredStation() {
+        //TODO show something that registration was successfull
+        snackbarState.messageRes = R.string.walk_started
+        snackbarState.build()
+        stationRepository.saveRegisteredStation(station.id!!)
+    }
+
+    fun getRegisteredStation() = stationRepository.getRegisteredStation()
 }

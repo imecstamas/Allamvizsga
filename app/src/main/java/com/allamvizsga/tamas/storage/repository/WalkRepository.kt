@@ -43,8 +43,8 @@ class WalkRepository(
             databaseReference.child(WALKS).child(id).child(STATIONS).observe({ dataSnapshot ->
                 val stations = mutableListOf<Station>()
                 val size = dataSnapshot.childrenCount
-                dataSnapshot.children.forEach {
-                    it.key?.let {
+                dataSnapshot.children.forEach { snapshot ->
+                    snapshot.key?.let { it ->
                         databaseReference.child(STATIONS).child(it).observe({
                             stations.add(mapToStation(it))
                             if (size.toInt() == stations.size) {
@@ -99,8 +99,6 @@ class WalkRepository(
     }
 
     fun getStartedWalkId() = sharedPreferencesManager.getStartedWalkId()
-
-    fun getStartedWalk() = getStartedWalkId()?.let { getById(it) }
 
     companion object {
         private const val WALKS = "walks"

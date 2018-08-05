@@ -18,13 +18,13 @@ val storageModule = applicationContext {
     bean { FirebaseDatabase.getInstance().reference }
     bean { SharedPreferencesManager(get()) }
     bean { WalkRepository(get(), get()) }
-    bean { StationRepository(get()) }
+    bean { StationRepository(get(), get()) }
 }
 
 val viewModelModule = applicationContext {
     viewModel { WalkListViewModel(get()) }
     viewModel { WalkDetailViewModel(get()) }
     viewModel { StationViewModel(get()) }
-    viewModel { ResponseViewModel(getProperty(ResponseActivity.CORRECT_ANSWER), getProperty(ResponseActivity.NEXT_STATION)) }
+    viewModel { ResponseViewModel(getProperty(ResponseActivity.CORRECT_ANSWER), getProperty(ResponseActivity.NEXT_STATION), get()) }
     viewModel { QuizViewModel(getProperty(QuizActivity.QUESTION)) }
 }

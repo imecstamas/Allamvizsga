@@ -23,18 +23,18 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
 
     fun getWalkDetail(walkId: String) {
         disposable = walkRepository.getById(walkId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                walk.value = it
-                if (walkRepository.getStartedWalkId() == it.id) {
-                    walkAlreadyStarted = true
-                    //If this walk has been already started, change the button icon
-                    buttonIconRes.set(R.drawable.ic_stop_black_24dp)
-                }
-            }, {
-                it.printStackTrace()
-            })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    walk.value = it
+                    if (walkRepository.getStartedWalkId() == it.id) {
+                        walkAlreadyStarted = true
+                        //If this walk has been already started, change the button icon
+                        buttonIconRes.set(R.drawable.ic_stop_black_24dp)
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     /**
