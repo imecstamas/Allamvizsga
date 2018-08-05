@@ -15,4 +15,6 @@
     <string name="navigate">Navigálás</string>
     <string name="i_can_find_it">Eltalálok</string>
     <string name="next_station">A következő állomás:</string>
+    <string name="check">Ellenőrzés</string>
+    <string name="quiz_game">Játék</string>
 </resources>

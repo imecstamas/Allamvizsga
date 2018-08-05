@@ -8,7 +8,10 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import com.allamvizsga.tamas.feature.shared.SnackbarState
+import com.allamvizsga.tamas.model.Answer
 import com.bumptech.glide.Glide
 
 /**
@@ -38,5 +41,15 @@ fun ViewGroup.setSnackbarState(snackbarState: SnackbarState) {
         }
         snackbar.show()
         snackbarState.clear()
+    }
+}
+
+@BindingAdapter("answers")
+fun RadioGroup.setAnswers(answers: List<Answer>) {
+    answers.forEachIndexed { index, answer ->
+        val radioButton = RadioButton(context)
+        radioButton.id = index
+        radioButton.text = answer.text
+        addView(radioButton)
     }
 }

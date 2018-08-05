@@ -37,7 +37,7 @@ class ResponseActivity : AppCompatActivity() {
         const val CORRECT_ANSWER = "correct_answer"
         const val NEXT_STATION = "next_station"
 
-        fun getStartIntent(context: Context, revealFrom: View, correctAnswer: Boolean, nextStation: Station): Intent {
+        fun getStartIntent(context: Context, revealFrom: View, correctAnswer: Boolean?, nextStation: Station): Intent {
             //calculates the center of the View revealFrom you are passing
             val revealX = (revealFrom.x + revealFrom.width / 2).toInt()
             val revealY = (revealFrom.y + revealFrom.height / 2).toInt()

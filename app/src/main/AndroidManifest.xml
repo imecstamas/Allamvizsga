@@ -33,12 +33,11 @@
         <activity
             android:name=".feature.walk.detail.WalkDetailActivity"
             android:theme="@style/AppTheme.WalkDetail" />
-
         <activity android:name=".feature.station.StationDetailActivity" />
-
         <activity
             android:name=".feature.response.ResponseActivity"
             android:theme="@style/AppTheme.Transparent" />
+        <activity android:name=".feature.quiz.QuizActivity" />
 
         <receiver
             android:name=".component.FenceReceiver"

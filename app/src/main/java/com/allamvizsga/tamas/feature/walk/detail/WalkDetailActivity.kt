@@ -13,7 +13,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.SharedElementCallback
 import android.view.View
 import android.widget.ImageView
@@ -21,7 +20,7 @@ import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.component.FenceReceiver
 import com.allamvizsga.tamas.databinding.WalkDetailActivityBinding
-import com.allamvizsga.tamas.feature.response.ResponseActivity
+import com.allamvizsga.tamas.feature.quiz.QuizActivity
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Walk
 import com.allamvizsga.tamas.storage.repository.WalkRepository
@@ -75,11 +74,8 @@ class WalkDetailActivity : BaseActivity() {
                 unregisterLocationFence()
                 viewModel.stopWalk()
             } else {
-                //We need to start the walk
-                //TODO change to quiz game screen, and only after that response
-                ActivityCompat.startActivity(this, ResponseActivity.getStartIntent(this, view, false, viewModel.walk.value!!.stations!![0]), null)
-                overridePendingTransition(0, 0)
-
+                //We need to start the walk, ask the first question
+                startActivity(QuizActivity.getStartIntent(this, viewModel.walk.value!!.stations!![0]))
                 runWithPermission(
                         android.Manifest.permission.ACCESS_FINE_LOCATION,
                         LOCATION_PERMISSION_REQUEST_CODE,
@@ -163,8 +159,8 @@ class WalkDetailActivity : BaseActivity() {
     private fun unregisterLocationFence() {
         FenceUpdateRequest.Builder().apply {
             walkRepository.getStartedWalk()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe({
-                        it.stations?.forEach {
+                    ?.subscribe({ walk ->
+                        walk.stations?.forEach {
                             removeFence(it.id)
                         }
                     }, {})
