@@ -7,7 +7,7 @@ import android.support.annotation.StringRes
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.model.Station
 
-class ResponseViewModel(correctAnswer: Boolean, nextStation: Station) : ViewModel() {
+class ResponseViewModel(correctAnswer: Boolean, val station: Station) : ViewModel() {
 
     @DrawableRes
     val icon = if (correctAnswer) {

@@ -3,6 +3,7 @@ package com.allamvizsga.tamas.feature.response
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -22,14 +23,26 @@ class ResponseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<ResponseBinding>(this, R.layout.response_activity).apply {
             setProperty(CORRECT_ANSWER, intent.getBooleanExtra(CORRECT_ANSWER, false))
-            setProperty(NEXT_STATION, intent.getParcelableExtra(NEXT_STATION))
+            val station = intent.getParcelableExtra<Station>(NEXT_STATION)
+            setProperty(NEXT_STATION, station)
             viewModel = getViewModel<ResponseViewModel>()
             revealAnimation = RevealAnimation(root, intent, this@ResponseActivity)
+            navigateButton.setOnClickListener {
+                val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:${station.coordinate.latitude},${station.coordinate.longitude}"))
+                mapIntent.setPackage("com.google.android.apps.maps")
+                if (mapIntent.resolveActivity(packageManager) != null) {
+                    startActivity(mapIntent)
+                }
+            }
         }
     }
 
     override fun onBackPressed() {
         revealAnimation.unRevealActivity()
+    }
+
+    fun registerGeofence() {
+        
     }
 
     companion object {

@@ -28,7 +28,7 @@ class QuizActivity : BaseActivity() {
             setProperty(QUESTION, question)
             viewModel = getViewModel<QuizViewModel>().also {
                 checkButton.setOnClickListener { view ->
-                    ActivityCompat.startActivity(this@QuizActivity, ResponseActivity.getStartIntent(this@QuizActivity, view, it.isAnswerCorrect(), intent.getParcelableExtra(STATION)), null)
+                    ActivityCompat.startActivity(this@QuizActivity, ResponseActivity.getStartIntent(this@QuizActivity, view, it.isAnswerCorrect(), intent.getParcelableExtra(NEXT_STATION)), null)
                     overridePendingTransition(0, 0)
                 }
             }
@@ -39,10 +39,10 @@ class QuizActivity : BaseActivity() {
     companion object {
 
         const val QUESTION = "quiz"
-        private const val STATION = "station"
+        private const val NEXT_STATION = "next_station"
 
         fun getStartIntent(context: Context, nextStation: Station): Intent =
                 Intent(context, QuizActivity::class.java)
-                        .putExtra(STATION, nextStation)
+                        .putExtra(NEXT_STATION, nextStation)
     }
 }
