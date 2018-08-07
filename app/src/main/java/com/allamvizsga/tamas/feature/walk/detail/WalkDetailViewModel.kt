@@ -1,7 +1,7 @@
 package com.allamvizsga.tamas.feature.walk.detail
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableBoolean
 import android.databinding.ObservableInt
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.feature.shared.SnackbarState
@@ -11,29 +11,32 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewModel() {
+class WalkDetailViewModel(private val walkRepository: WalkRepository, val walk: Walk) : ViewModel() {
 
-    private var disposable: Disposable? = null
+    private val disposable: Disposable
 
     var buttonIconRes = ObservableInt(R.drawable.ic_play_arrow_black_24dp)
-    val walk = MutableLiveData<Walk>()
-    val startEnabled get() = walk.value != null
+    var walkWithStations: Walk? = null
+    val startEnabled = ObservableBoolean(false)
     var walkAlreadyStarted = false
     val snackbarState = SnackbarState()
 
-    fun getWalkDetail(walkId: String) {
-        disposable = walkRepository.getById(walkId)
+    init {
+        disposable = walkRepository.getById(walk.id!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    walk.value = it
+                    walkWithStations = it
+                    startEnabled.set(true)
                     if (walkRepository.getStartedWalkId() == it.id) {
                         walkAlreadyStarted = true
-                        //If this walk has been already started, change the button icon
+                        //If this walkWithStations has been already started, change the button icon
                         buttonIconRes.set(R.drawable.ic_stop_black_24dp)
                     }
                 }, {
-                    it.printStackTrace()
+                    snackbarState.apply {
+                        messageRes = R.string.there_was_a_problem_downloading_the_content
+                    }.build()
                 })
     }
 
@@ -42,23 +45,23 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository) : ViewMode
      */
     fun startWalk() {
         buttonIconRes.set(R.drawable.ic_stop_black_24dp)
-        walk.value?.id?.let { walkRepository.saveStartedWalk(it) }
-        snackbarState.apply {
-            messageRes = R.string.walk_started
-        }.build()
+        walkWithStations?.id?.let { walkRepository.saveStartedWalk(it) }
         walkAlreadyStarted = true
     }
 
     /**
-     * This method is called when a walk is started and the user wants to stop it manually
+     * This method is called when a walkWithStations is started and the user wants to stop it manually
      */
     fun stopWalk() {
+        snackbarState.apply {
+            messageRes = R.string.walk_stopped
+        }.build()
         buttonIconRes.set(R.drawable.ic_play_arrow_black_24dp)
         walkRepository.stopWalk()
         walkAlreadyStarted = false
     }
 
     override fun onCleared() {
-        disposable?.dispose()
+        disposable.dispose()
     }
 }

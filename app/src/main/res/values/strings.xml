@@ -17,4 +17,5 @@
     <string name="next_station">A következő állomás:</string>
     <string name="check">Ellenőrzés</string>
     <string name="quiz_game">Játék</string>
+    <string name="walk_stopped">Séta leállítva. Nem fogsz több értesítést kapni a helyszínekről</string>
 </resources>

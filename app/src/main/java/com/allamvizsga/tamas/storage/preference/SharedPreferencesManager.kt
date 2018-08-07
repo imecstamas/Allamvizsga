@@ -13,11 +13,13 @@ class SharedPreferencesManager(context: Context) {
         sharedPreferences.edit().putString(STARTED_WALK_ID, walkId).apply()
     }
 
+    fun getStartedWalkId(): String? = sharedPreferences.getString(STARTED_WALK_ID, null)
+
+
     fun stopWalk() {
+        sharedPreferences.edit().remove(STARTED_WALK_ID).apply()
         sharedPreferences.edit().remove(REGISTERED_STATION_ID).apply()
     }
-
-    fun getStartedWalkId(): String? = sharedPreferences.getString(STARTED_WALK_ID, null)
 
     fun saveRegisteredStation(stationId: String) {
         sharedPreferences.edit().putString(REGISTERED_STATION_ID, stationId).apply()
