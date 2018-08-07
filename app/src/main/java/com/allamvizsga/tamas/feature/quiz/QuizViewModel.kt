@@ -1,6 +1,7 @@
 package com.allamvizsga.tamas.feature.quiz
 
 import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.text.Spannable
 import android.text.SpannableString
@@ -10,10 +11,12 @@ import com.allamvizsga.tamas.model.Question
 
 class QuizViewModel(val question: Question) : ViewModel() {
 
+    val checkEnabled = ObservableBoolean(false)
     val questionText = ObservableField<SpannableString>(SpannableString(question.text))
     private var selectedAnswer: Answer? = null
 
     fun onCheckedChanged(position: Int) {
+        checkEnabled.set(true)
         selectedAnswer = question.answers[position].also { answer ->
             val start = question.text.indexOf("_")
             val spannable = SpannableString(question.text.replace("__________", answer.text))
