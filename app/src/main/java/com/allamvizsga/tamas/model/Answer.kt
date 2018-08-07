@@ -1,3 +1,7 @@
 package com.allamvizsga.tamas.model
 
-data class Answer(val text: String, val correct: Boolean)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Answer(val text: String, val correct: Boolean) : Parcelable

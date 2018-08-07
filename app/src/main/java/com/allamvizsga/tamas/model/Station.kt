@@ -10,5 +10,6 @@ data class Station(
         val coordinate: Coordinate,
         val description: String,
         val imageUrl: String,
-        val audioUrl: String
+        val audioUrl: String,
+        val question: Question
 ) : Parcelable

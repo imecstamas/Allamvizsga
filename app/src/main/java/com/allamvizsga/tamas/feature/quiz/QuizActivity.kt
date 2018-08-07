@@ -9,8 +9,6 @@ import com.allamvizsga.tamas.QuizBinding
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.feature.response.ResponseActivity
 import com.allamvizsga.tamas.feature.shared.BaseActivity
-import com.allamvizsga.tamas.model.Answer
-import com.allamvizsga.tamas.model.Question
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import org.koin.android.architecture.ext.getViewModel
@@ -20,12 +18,8 @@ class QuizActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        TODO add the question into the station
-        val question = Question("A kolozsvári Képzőművészeti és Formatervezési Egyetem eredetileg __________ volt. ", listOf(Answer("katonai állomás", false), Answer("Mátyás király szülőháza", true), Answer("bevásárlóközpont", false)))
-
         DataBindingUtil.setContentView<QuizBinding>(this, R.layout.quiz_activity).apply {
-            setProperty(QUESTION, question)
+            setProperty(QUESTION, intent.getParcelableExtra<Station>(NEXT_STATION).question)
             viewModel = getViewModel<QuizViewModel>().also {
                 checkButton.setOnClickListener { view ->
                     ActivityCompat.startActivity(this@QuizActivity, ResponseActivity.getStartIntent(this@QuizActivity, view, it.isAnswerCorrect(), intent.getParcelableExtra(NEXT_STATION)), null)
