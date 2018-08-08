@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.ResponseBinding
 import com.allamvizsga.tamas.component.FenceReceiver
+import com.allamvizsga.tamas.feature.station.StationDetailActivity
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.RevealAnimation
 import com.allamvizsga.tamas.util.extension.runWithPermission
@@ -72,6 +73,8 @@ class ResponseActivity : AppCompatActivity() {
     }
 
     private fun registerStation() {
+        //TODO remove this
+        startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
         runWithPermission(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 LOCATION_PERMISSION_REQUEST_CODE,

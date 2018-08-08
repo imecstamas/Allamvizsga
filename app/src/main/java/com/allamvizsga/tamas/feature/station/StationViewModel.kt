@@ -1,5 +1,6 @@
 package com.allamvizsga.tamas.feature.station
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableInt
 import com.allamvizsga.tamas.R
@@ -16,8 +17,10 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
     private var disposable: Disposable? = null
     private var seekBarUpdater: Disposable? = null
     private var mediaPlayer: MediaPlayerHolder? = null
-    private var audioUrl: String? = null
-    val fabResource = ObservableInt(R.drawable.ic_play_arrow_black_24dp)
+
+    val station = MutableLiveData<Station>()
+
+    val buttonDrawableRes = ObservableInt(R.drawable.ic_play_arrow_black_24dp)
     val progressPosition = ObservableInt(0)
     val maxProgress = ObservableInt(0)
 
@@ -25,15 +28,16 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
         disposable = stationsRepository.getById(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ station ->
-                    initStation(station)
+                .subscribe({ it ->
+                    initStation(it)
+                    station.value = it
                 }, {
                     it.printStackTrace()
                 })
     }
 
     fun initStation(station: Station) {
-        audioUrl = station.audioUrl
+        this.station.value = station
         initPlayer(station.audioUrl)
     }
 
@@ -47,7 +51,7 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
             }
             onCompletedListener = {
                 seekBarUpdater?.dispose()
-                fabResource.set(R.drawable.ic_play_arrow_black_24dp)
+                buttonDrawableRes.set(R.drawable.ic_play_arrow_black_24dp)
                 mediaPlayer = null
             }
         }
@@ -57,25 +61,23 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
         mediaPlayer?.let { mediaPlayer ->
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause()
-                fabResource.set(R.drawable.ic_play_arrow_black_24dp)
+                buttonDrawableRes.set(R.drawable.ic_play_arrow_black_24dp)
                 seekBarUpdater?.dispose()
             } else {
                 play(mediaPlayer)
             }
-        } ?: audioUrl?.let {
-            initPlayer(it, true)
-        }
+        } ?: station.value?.audioUrl?.let { initPlayer(it, true) }
     }
 
     private fun play(mediaPlayer: MediaPlayerHolder) {
         mediaPlayer.play()
-        fabResource.set(R.drawable.ic_pause_black_24dp)
+        buttonDrawableRes.set(R.drawable.ic_pause_black_24dp)
         seekBarUpdater = Observable.interval(500, TimeUnit.MILLISECONDS)
-                .subscribe({
-                    mediaPlayer.let {
-                        progressPosition.set(it.getCurrentPosition())
+                .subscribe {
+                    mediaPlayer.let { mediaPlayerHolder ->
+                        progressPosition.set(mediaPlayerHolder.getCurrentPosition())
                     }
-                })
+                }
     }
 
     fun onProgressChanged(position: Int, fromUser: Boolean) {

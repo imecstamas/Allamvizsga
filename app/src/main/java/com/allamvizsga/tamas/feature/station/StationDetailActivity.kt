@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.StationDetailBinding
 import com.allamvizsga.tamas.model.Station
+import com.allamvizsga.tamas.util.extension.setUpToolbar
 import org.koin.android.architecture.ext.getViewModel
 
 class StationDetailActivity : AppCompatActivity() {
@@ -24,6 +25,7 @@ class StationDetailActivity : AppCompatActivity() {
                     }
                 }
             }
+            setUpToolbar(toolbar)
         }
     }
 
