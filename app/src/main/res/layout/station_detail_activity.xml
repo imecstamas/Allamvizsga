@@ -55,7 +55,6 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <!-- TODO marginbottom/paddingbottom  not working -->
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -66,8 +65,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:padding="@dimen/base_line"
-                android:text="@{viewModel.station.description}" />
+                android:paddingStart="@dimen/base_line"
+                android:paddingTop="@dimen/base_line"
+                android:paddingEnd="@dimen/base_line"
+                android:paddingBottom="@dimen/big_margin"
+                android:text="@{viewModel.station.description}"
+                tools:text="kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnfdskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf, kdjsfnjsnfjsdfnjdskfndjsfndskjfnknwekfnewfkjndsfjksndfjnsfksdjfnds.fjndsf,jsnfkw4fnjknfdjs,nf,sdjfnsd,fjnsj,fndsf,jsndfjsdnf,jdsnfdsjfnsdj,fnsdfjnsdf,jdsnfjsdnfjsd,fnsdjfndsj,fnsdj,fndsj,fnds,jfnsd,jfnsd,jfnsdj,fnsdj,fnsdj,fnsd,jfndjs,fns,jdfsndfj,sdnfjsdnf,jsdnf" />
 
         </android.support.v4.widget.NestedScrollView>
 
