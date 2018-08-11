@@ -1,5 +1,8 @@
 package com.allamvizsga.tamas.util.extension
 
+import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -12,7 +15,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.Window
+import android.widget.Toast
+import com.google.ar.core.ArCoreApk
 import java.util.*
+
 
 fun AppCompatActivity.setUpToolbar(toolbar: Toolbar, displayUp: Boolean = true) {
     setSupportActionBar(toolbar)
@@ -21,7 +27,7 @@ fun AppCompatActivity.setUpToolbar(toolbar: Toolbar, displayUp: Boolean = true) 
 
 fun AppCompatActivity.startActivityWithTransition(intent: Intent, vararg sharedViews: View?) {
     val pairs =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) buildSharedElements(*sharedViews) else null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) buildSharedElements(*sharedViews) else null
     if (pairs != null) {
         startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this, *pairs).toBundle())
     } else {
@@ -57,15 +63,15 @@ private fun AppCompatActivity.buildSharedElements(vararg targetViews: View?): Ar
 }
 
 fun AppCompatActivity.runWithPermission(
-    permission: String,
-    permissionRequestCode: Int,
-    method: () -> Unit,
-    permissionRationale: () -> Unit
+        permission: String,
+        permissionRequestCode: Int,
+        method: () -> Unit,
+        permissionRationale: () -> Unit
 ) {
     if (ContextCompat.checkSelfPermission(
-            this,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
     ) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             permissionRationale.invoke()
@@ -76,3 +82,20 @@ fun AppCompatActivity.runWithPermission(
         method.invoke()
     }
 }
+
+fun Activity.isDeviceSupported(): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        Toast.makeText(this, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show()
+        return false
+    }
+    val openGlVersionString = (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).deviceConfigurationInfo.glEsVersion
+    if (openGlVersionString.toDouble() < MIN_OPENGL_VERSION) {
+        Toast.makeText(this, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG)
+                .show()
+        return false
+    }
+    //TODO probably we need to check the isTransient too
+    return ArCoreApk.getInstance().checkAvailability(this).isSupported
+}
+
+private const val MIN_OPENGL_VERSION = 3.0
