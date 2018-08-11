@@ -13,6 +13,17 @@ import android.view.MotionEvent
 import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.model.Station
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.RawResourceDataSource
+import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.video.VideoListener
 import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
@@ -23,6 +34,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 
+
 @RequiresApi(Build.VERSION_CODES.N)
 class StationArActivity : AppCompatActivity() {
 
@@ -30,6 +42,9 @@ class StationArActivity : AppCompatActivity() {
 
     private var videoRenderable: ModelRenderable? = null
     private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var player: SimpleExoPlayer
+    private var videoWidth: Float = 0F
+    private var videoHeight: Float = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +55,22 @@ class StationArActivity : AppCompatActivity() {
         val texture = ExternalTexture()
 
         // Create an Android MediaPlayer to capture the video on the external texture's surface.
-        mediaPlayer = MediaPlayer.create(this, R.raw.chicken_chroma)
-        mediaPlayer.setSurface(texture.surface)
-        mediaPlayer.isLooping = true
+        // 1. Create a default TrackSelector
+        val bandwidthMeter = DefaultBandwidthMeter()
+        val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
+        val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
+
+        // 2. Create the player
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+
+        // Produces DataSource instances through which media data is loaded.
+        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), null)
+        // This is the MediaSource representing the media to be played.
+        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(RawResourceDataSource.buildRawResourceUri(R.raw.chicken_chroma))
+        // Prepare the player with the source.
+        player.prepare(videoSource)
+        player.setVideoSurface(texture.surface)
+        player.repeatMode = REPEAT_MODE_ALL
 
         // Create a renderable with a material that has a parameter of type 'samplerExternal' so that
         // it can display an ExternalTexture. The material also has an implementation of a chroma key
@@ -62,6 +90,16 @@ class StationArActivity : AppCompatActivity() {
                     null
                 }
 
+        player.addVideoListener(object : VideoListener {
+            override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
+                videoWidth = width.toFloat()
+                videoHeight = height.toFloat()
+            }
+
+            override fun onRenderedFirstFrame() {
+            }
+        })
+
         arFragment.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane, motionEvent: MotionEvent ->
 
             videoRenderable?.let {
@@ -76,34 +114,29 @@ class StationArActivity : AppCompatActivity() {
                 videoNode.setParent(anchorNode)
 
                 // Set the scale of the node so that the aspect ratio of the video is correct.
-                val videoWidth = mediaPlayer.videoWidth.toFloat()
-                val videoHeight = mediaPlayer.videoHeight.toFloat()
                 videoNode.localScale = Vector3(
                         VIDEO_HEIGHT_METERS * (videoWidth / videoHeight), VIDEO_HEIGHT_METERS, 1.0f)
 
                 // Start playing the video when the first node is placed.
-                if (!mediaPlayer.isPlaying) {
-                    mediaPlayer.start()
+                player.playWhenReady = true
 
-                    // Wait to set the renderable until the first frame of the  video becomes available.
-                    // This prevents the renderable from briefly appearing as a black quad before the video
-                    // plays.
-                    texture
-                            .surfaceTexture
-                            .setOnFrameAvailableListener { surfaceTexture: SurfaceTexture ->
-                                videoNode.renderable = videoRenderable
-                                texture.surfaceTexture.setOnFrameAvailableListener(null)
-                            }
-                } else {
-                    videoNode.renderable = videoRenderable
-                }
+
+                // Wait to set the renderable until the first frame of the  video becomes available.
+                // This prevents the renderable from briefly appearing as a black quad before the video
+                // plays.
+                texture.surfaceTexture
+                        .setOnFrameAvailableListener { surfaceTexture: SurfaceTexture ->
+                            videoNode.renderable = videoRenderable
+                            texture.surfaceTexture.setOnFrameAvailableListener(null)
+                        }
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        player.release()
+//        mediaPlayer.release()
     }
 
     companion object {

@@ -75,6 +75,8 @@ dependencies {
     // ARCore
     implementation "com.google.ar.sceneform:core:$arcore_version"
     implementation "com.google.ar.sceneform.ux:sceneform-ux:$arcore_version"
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
