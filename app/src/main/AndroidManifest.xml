@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- Needed for the JobIntentService on API levels lower then Oreo -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Needed for the AR -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".AllamvizsgaApplication"
@@ -18,11 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM" />
 
         <activity android:name=".MainActivity" />
+
         <activity android:name=".feature.walk.list.WalkListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,14 +30,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".feature.walk.detail.WalkDetailActivity"
             android:theme="@style/AppTheme.WalkDetail" />
+
         <activity android:name=".feature.station.StationDetailActivity" />
+
         <activity
             android:name=".feature.response.ResponseActivity"
             android:theme="@style/AppTheme.Transparent" />
+
         <activity android:name=".feature.quiz.QuizActivity" />
+
+        <activity android:name=".feature.station.StationArActivity" />
+
+
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="optional" />
+
+        <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyBzPzMS3xnl-iEUcbNzmomt104POar7TDM" />
 
         <receiver
             android:name=".component.FenceReceiver"

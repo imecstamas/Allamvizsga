@@ -17,9 +17,11 @@ import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.ResponseBinding
 import com.allamvizsga.tamas.component.FenceReceiver
+import com.allamvizsga.tamas.feature.station.StationArActivity
 import com.allamvizsga.tamas.feature.station.StationDetailActivity
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.RevealAnimation
+import com.allamvizsga.tamas.util.extension.isDeviceSupported
 import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.estimote.proximity_sdk.proximity.EstimoteCloudCredentials
 import com.estimote.proximity_sdk.proximity.ProximityObserver
@@ -74,7 +76,11 @@ class ResponseActivity : AppCompatActivity() {
 
     private fun registerStation() {
         //TODO remove this
-        startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
+        if (isDeviceSupported()) {
+            startActivity(StationArActivity.getStartIntent(this, responseViewModel.station))
+        } else {
+            startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
+        }
         runWithPermission(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 LOCATION_PERMISSION_REQUEST_CODE,
