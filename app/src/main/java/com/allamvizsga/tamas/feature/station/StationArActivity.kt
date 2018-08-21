@@ -3,7 +3,7 @@ package com.allamvizsga.tamas.feature.station
 import android.content.Context
 import android.content.Intent
 import android.graphics.SurfaceTexture
-import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -14,9 +14,9 @@ import android.widget.Toast
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.model.Station
 import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MergingMediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -41,7 +41,6 @@ class StationArActivity : AppCompatActivity() {
     private lateinit var arFragment: ArFragment
 
     private var videoRenderable: ModelRenderable? = null
-    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var player: SimpleExoPlayer
     private var videoWidth: Float = 0F
     private var videoHeight: Float = 0F
@@ -66,11 +65,13 @@ class StationArActivity : AppCompatActivity() {
         // Produces DataSource instances through which media data is loaded.
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), null)
         // This is the MediaSource representing the media to be played.
-        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(RawResourceDataSource.buildRawResourceUri(R.raw.chicken_chroma))
+        val audioUrl = intent.getParcelableExtra<Station>(STATION).audioUrl
+        val audioSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(audioUrl))
+        // The video file shouldn't have any audio tracks
+        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(RawResourceDataSource.buildRawResourceUri(R.raw.test))
         // Prepare the player with the source.
-        player.prepare(videoSource)
+        player.prepare(MergingMediaSource(audioSource, videoSource))
         player.setVideoSurface(texture.surface)
-        player.repeatMode = REPEAT_MODE_ALL
 
         // Create a renderable with a material that has a parameter of type 'samplerExternal' so that
         // it can display an ExternalTexture. The material also has an implementation of a chroma key
@@ -83,7 +84,7 @@ class StationArActivity : AppCompatActivity() {
                     renderable.material.setExternalTexture("videoTexture", texture)
                     renderable.material.setFloat4("keyColor", CHROMA_KEY_COLOR)
                 }
-                .exceptionally { throwable ->
+                .exceptionally { _ ->
                     val toast = Toast.makeText(this, "Unable to load video renderable", Toast.LENGTH_LONG)
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
@@ -100,9 +101,10 @@ class StationArActivity : AppCompatActivity() {
             }
         })
 
-        arFragment.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane, motionEvent: MotionEvent ->
+        arFragment.setOnTapArPlaneListener { hitResult: HitResult, _: Plane, _: MotionEvent ->
 
             videoRenderable?.let {
+                arFragment.setOnTapArPlaneListener(null)
                 // Create the Anchor.
                 val anchor = hitResult.createAnchor()
                 val anchorNode = AnchorNode(anchor)
@@ -124,11 +126,10 @@ class StationArActivity : AppCompatActivity() {
                 // Wait to set the renderable until the first frame of the  video becomes available.
                 // This prevents the renderable from briefly appearing as a black quad before the video
                 // plays.
-                texture.surfaceTexture
-                        .setOnFrameAvailableListener { surfaceTexture: SurfaceTexture ->
-                            videoNode.renderable = videoRenderable
-                            texture.surfaceTexture.setOnFrameAvailableListener(null)
-                        }
+                texture.surfaceTexture.setOnFrameAvailableListener { _: SurfaceTexture ->
+                    videoNode.renderable = videoRenderable
+                    texture.surfaceTexture.setOnFrameAvailableListener(null)
+                }
             }
         }
     }
@@ -136,7 +137,6 @@ class StationArActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         player.release()
-//        mediaPlayer.release()
     }
 
     companion object {
