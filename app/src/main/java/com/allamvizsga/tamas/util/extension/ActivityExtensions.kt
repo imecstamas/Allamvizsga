@@ -1,6 +1,5 @@
 package com.allamvizsga.tamas.util.extension
 
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -83,7 +82,7 @@ fun AppCompatActivity.runWithPermission(
     }
 }
 
-fun Activity.isDeviceSupported(): Boolean {
+fun Context.isDeviceSupported(): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
         Toast.makeText(this, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show()
         return false

@@ -1,9 +1,7 @@
 package com.allamvizsga.tamas.feature.response
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.PendingIntent
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -23,16 +21,13 @@ import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.RevealAnimation
 import com.allamvizsga.tamas.util.extension.isDeviceSupported
 import com.allamvizsga.tamas.util.extension.runWithPermission
-import com.estimote.proximity_sdk.proximity.EstimoteCloudCredentials
-import com.estimote.proximity_sdk.proximity.ProximityObserver
-import com.estimote.proximity_sdk.proximity.ProximityObserverBuilder
 import com.google.android.gms.awareness.Awareness
 import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import com.google.android.gms.awareness.fence.LocationFence
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.architecture.ext.getViewModel
-import org.koin.android.ext.android.setProperty
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 
 class ResponseActivity : AppCompatActivity() {
@@ -40,14 +35,11 @@ class ResponseActivity : AppCompatActivity() {
     lateinit var revealAnimation: RevealAnimation
     lateinit var responseViewModel: ResponseViewModel
     private var pendingIntent: PendingIntent? = null
-    private var observationHandler: ProximityObserver.Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<ResponseBinding>(this, R.layout.response_activity).apply {
-            setProperty(CORRECT_ANSWER, intent.getBooleanExtra(CORRECT_ANSWER, false))
-            setProperty(NEXT_STATION, intent.getParcelableExtra(NEXT_STATION))
-            viewModel = getViewModel<ResponseViewModel>().also {
+            viewModel = getViewModel<ResponseViewModel> { parametersOf(intent.getBooleanExtra(CORRECT_ANSWER, false), intent.getParcelableExtra(NEXT_STATION)) }.also {
                 responseViewModel = it
             }
             revealAnimation = RevealAnimation(root, intent, this@ResponseActivity)
@@ -68,33 +60,19 @@ class ResponseActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        //TODO check if we want to stop here the observation
-        observationHandler?.stop()
-        super.onDestroy()
-    }
-
     private fun registerStation() {
-        //TODO remove this
-        if (isDeviceSupported()) {
-            startActivity(StationArActivity.getStartIntent(this, responseViewModel.station))
-        } else {
-            startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
-        }
+//        //TODO remove this
+//        if (isDeviceSupported()) {
+//            startActivity(StationArActivity.getStartIntent(this, responseViewModel.station))
+//        } else {
+//            startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
+//        }
         runWithPermission(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 LOCATION_PERMISSION_REQUEST_CODE,
                 ::startLocationServices,
                 ::showPermissionRationale
         )
-        //Check if the Bluetooth is enabled or not
-        BluetoothAdapter.getDefaultAdapter()?.let {
-            if (it.isEnabled) {
-                registerBeacons()
-            } else {
-                startActivityForResult(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), BLUETOOTH_ENABLE_REQUEST_CODE)
-            }
-        }
     }
 
     override fun onBackPressed() {
@@ -155,29 +133,6 @@ class ResponseActivity : AppCompatActivity() {
             }
     //endregion
 
-    private fun registerBeacons() {
-        val cloudCredentials = EstimoteCloudCredentials(APP_ID, APP_TOKEN)
-        val proximityObserver = ProximityObserverBuilder(applicationContext, cloudCredentials)
-                .withBalancedPowerMode()
-                .withOnErrorAction { /* handle errors here */ }
-                .build()
-
-
-        // Kotlin
-        val venueZone = proximityObserver.zoneBuilder()
-                .forAttachmentKeyAndValue("location", "halcyon")
-                .inFarRange()
-                .withOnEnterAction {
-                    Toast.makeText(this, "Bent vagy!", Toast.LENGTH_SHORT).show()
-                }
-                .withOnExitAction {
-                    Toast.makeText(this, "Kint vagy!", Toast.LENGTH_SHORT).show()
-                }
-                .create()
-
-        observationHandler = proximityObserver.addProximityZone(venueZone).start()
-    }
-
     private fun showPermissionRationale() {
         responseViewModel.snackbarState.apply {
             messageRes = R.string.location_permission_rationale
@@ -191,22 +146,7 @@ class ResponseActivity : AppCompatActivity() {
         }.build()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == BLUETOOTH_ENABLE_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                registerBeacons()
-            } else {
-                //TODO add snackbar that bluetooth is disabled
-            }
-        }
-    }
-
     companion object {
-
-        private const val APP_TOKEN = "c0280bc13a0e76e121f2f78f58088706"
-        private const val APP_ID = "allamvizsga-7j2"
-
-        private const val BLUETOOTH_ENABLE_REQUEST_CODE = 123
 
         const val CORRECT_ANSWER = "correct_answer"
         const val NEXT_STATION = "next_station"

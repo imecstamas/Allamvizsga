@@ -148,8 +148,9 @@ class StationArActivity : AppCompatActivity() {
         private const val VIDEO_HEIGHT_METERS = 0.85f
 
         private const val STATION = "station"
+        private const val STATION_ID = "station_id"
 
-        fun getStartIntent(context: Context, station: Station): Intent =
-                Intent(context, StationArActivity::class.java).putExtra(STATION, station)
+        fun getStartIntent(context: Context, station: Station? = null, stationId: String? = null): Intent =
+                Intent(context, StationArActivity::class.java).putExtra(STATION_ID, stationId).putExtra(STATION, station)
     }
 }

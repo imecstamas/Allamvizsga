@@ -20,8 +20,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import org.koin.android.architecture.ext.getViewModel
-import org.koin.android.ext.android.setProperty
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 class WalkDetailActivity : BaseActivity() {
 
@@ -35,8 +35,7 @@ class WalkDetailActivity : BaseActivity() {
         binding.setLifecycleOwner(this)
 
         val walk = intent.getParcelableExtra<Walk>(WALK)
-        setProperty(WALK, walk)
-        val viewModel = getViewModel<WalkDetailViewModel>()
+        val viewModel = getViewModel<WalkDetailViewModel> { parametersOf(walk) }
         binding.viewModel = viewModel
 
         scheduleStartPostponeEnterTransitionOnLoad(binding.imageView, walk.imageUrl)
@@ -94,7 +93,7 @@ class WalkDetailActivity : BaseActivity() {
 
     companion object {
 
-        const val WALK = "walkWithStations"
+        private const val WALK = "walkWithStations"
 
         fun getStartIntent(context: Context, walk: Walk): Intent =
                 Intent(context, WalkDetailActivity::class.java).putExtra(WALK, walk)

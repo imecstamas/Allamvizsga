@@ -12,7 +12,7 @@ import com.allamvizsga.tamas.feature.walk.detail.WalkDetailActivity
 import com.allamvizsga.tamas.util.extension.observe
 import com.allamvizsga.tamas.util.extension.setUpToolbar
 import com.allamvizsga.tamas.util.extension.startActivityWithTransition
-import org.koin.android.architecture.ext.getViewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
 
 class WalkListActivity : BaseActivity() {
 

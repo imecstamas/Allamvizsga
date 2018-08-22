@@ -9,7 +9,7 @@ import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.StationDetailBinding
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.extension.setUpToolbar
-import org.koin.android.architecture.ext.getViewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
 
 class StationDetailActivity : AppCompatActivity() {
 

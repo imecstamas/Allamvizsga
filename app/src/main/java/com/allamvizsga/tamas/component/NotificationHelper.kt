@@ -4,15 +4,16 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.allamvizsga.tamas.MainActivity
 import com.allamvizsga.tamas.R
+import com.allamvizsga.tamas.feature.station.StationArActivity
 import com.allamvizsga.tamas.feature.station.StationDetailActivity
 import com.allamvizsga.tamas.model.Station
+import com.allamvizsga.tamas.util.extension.isDeviceSupported
 
 object NotificationHelper {
 
@@ -29,11 +30,12 @@ object NotificationHelper {
         }
 
         // Create an explicit content Intent that starts the main Activity.
-        val notificationIntent = when {
-            station != null -> StationDetailActivity.getStartIntent(context.applicationContext, station = station)
-            stationId != null -> StationDetailActivity.getStartIntent(context.applicationContext, stationId = stationId)
-            else -> Intent(context.applicationContext, MainActivity::class.java)
-        }
+        val notificationIntent = if (context.isDeviceSupported()) {
+            StationArActivity.Companion::getStartIntent
+        } else {
+            StationDetailActivity.Companion::getStartIntent
+        }.invoke(context, station, stationId)
+
         // Construct a task stack.
         val stackBuilder = TaskStackBuilder.create(context)
         // Add the main Activity to the task stack as the parent.

@@ -11,16 +11,15 @@ import com.allamvizsga.tamas.feature.response.ResponseActivity
 import com.allamvizsga.tamas.feature.shared.BaseActivity
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.extension.setUpToolbar
-import org.koin.android.architecture.ext.getViewModel
-import org.koin.android.ext.android.setProperty
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 class QuizActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<QuizBinding>(this, R.layout.quiz_activity).apply {
-            setProperty(QUESTION, intent.getParcelableExtra<Station>(NEXT_STATION).question)
-            viewModel = getViewModel<QuizViewModel>().also {
+            viewModel = getViewModel<QuizViewModel> { parametersOf(intent.getParcelableExtra<Station>(NEXT_STATION).question) }.also {
                 checkButton.setOnClickListener { view ->
                     ActivityCompat.startActivity(this@QuizActivity, ResponseActivity.getStartIntent(this@QuizActivity, view, it.isAnswerCorrect(), intent.getParcelableExtra(NEXT_STATION)), null)
                     overridePendingTransition(0, 0)
@@ -32,7 +31,6 @@ class QuizActivity : BaseActivity() {
 
     companion object {
 
-        const val QUESTION = "quiz"
         private const val NEXT_STATION = "next_station"
 
         fun getStartIntent(context: Context, nextStation: Station): Intent =

@@ -5,8 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Needed for the Fence Api -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Needed for the Fence Api, specifically for Beacons -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- Needed for the JobIntentService on API levels lower then Oreo -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Needed for the AR -->

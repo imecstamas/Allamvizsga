@@ -61,11 +61,11 @@ dependencies {
     // Koin for Android
     implementation "org.koin:koin-android:$koin_version"
     // Koin for Android Architecture Components
-    implementation "org.koin:koin-android-architecture:$koin_version"
+    implementation "org.koin:koin-android-scope:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    // Estimote Beacons
-    implementation 'com.estimote:proximity-sdk:0.4.1'
 
     implementation 'com.halcyonmobile.support:statelayout:1.0.4.3.00.1'
     implementation 'com.halcyonmobile.support:progressbar:1.1.2'
