@@ -11,5 +11,6 @@ data class Station(
         val description: String,
         val imageUrl: String,
         val audioUrl: String,
+        val videoUrl: String,
         val question: Question
 ) : Parcelable

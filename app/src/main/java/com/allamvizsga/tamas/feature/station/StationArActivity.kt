@@ -26,7 +26,6 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.VideoListener
 import com.google.android.gms.awareness.Awareness
@@ -93,10 +92,10 @@ class StationArActivity : AppCompatActivity() {
         // Produces DataSource instances through which media data is loaded.
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), null)
         // This is the MediaSource representing the media to be played.
-        val audioUrl = intent.getParcelableExtra<Station>(STATION).audioUrl
-        val audioSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(audioUrl))
+        val station = intent.getParcelableExtra<Station>(STATION)
+        val audioSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(station.audioUrl))
         // The video file shouldn't have any audio tracks
-        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(RawResourceDataSource.buildRawResourceUri(R.raw.test))
+        val videoSource = ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(station.videoUrl))
         // Prepare the player with the source.
         player.prepare(MergingMediaSource(audioSource, videoSource))
         player.setVideoSurface(texture.surface)

@@ -38,6 +38,7 @@ fun mapToStation(dataSnapShot: DataSnapshot): Station {
             resultMap["description"] as String,
             resultMap["imageUrl"] as String,
             resultMap["audioUrl"] as String,
+            resultMap["videoUrl"] as String,
             Question(question["text"] as String, answerList)
     )
 }
