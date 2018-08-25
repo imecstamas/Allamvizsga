@@ -37,8 +37,7 @@ class ResponseViewModel(correctAnswer: Boolean, val station: Station, private va
     val navigateButtonEnabled = correctAnswer
 
     fun saveRegisteredStation() {
-        //TODO show something that registration was successfull
-        snackbarState.messageRes = R.string.walk_started
+        snackbarState.messageRes = R.string.next_station_registered
         snackbarState.build()
         stationRepository.saveRegisteredStation(station.id!!)
     }

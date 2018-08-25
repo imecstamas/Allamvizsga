@@ -2,6 +2,7 @@ package com.allamvizsga.tamas.architecture.injection
 
 import com.allamvizsga.tamas.feature.quiz.QuizViewModel
 import com.allamvizsga.tamas.feature.response.ResponseViewModel
+import com.allamvizsga.tamas.feature.station.StationArViewModel
 import com.allamvizsga.tamas.feature.station.StationViewModel
 import com.allamvizsga.tamas.feature.walk.detail.WalkDetailViewModel
 import com.allamvizsga.tamas.feature.walk.list.WalkListViewModel
@@ -28,4 +29,5 @@ val viewModelModule = module {
     viewModel { StationViewModel(get()) }
     viewModel { (isCorrectAnswer: Boolean, nextStation: Station) -> ResponseViewModel(isCorrectAnswer, nextStation, get()) }
     viewModel { (question: Question) -> QuizViewModel(question) }
+    viewModel { StationArViewModel(get()) }
 }

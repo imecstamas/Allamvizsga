@@ -1,5 +1,6 @@
 package com.allamvizsga.tamas.feature.walk.list
 
+import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -43,5 +44,9 @@ class WalkListActivity : BaseActivity() {
                     view.findViewById<ImageView>(R.id.image_view)
             )
         }
+    }
+
+    companion object {
+        fun getStartIntent(context: Context): Intent = Intent(context, WalkListActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
 }

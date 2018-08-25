@@ -71,7 +71,6 @@ dependencies {
     implementation 'com.halcyonmobile.support:progressbar:1.1.2'
     implementation 'com.halcyonmobile.support:databinding:0.1.0.5'
 
-    kapt "androidx.databinding:databinding-compiler:$gradleVersion"
     // ARCore
     implementation "com.google.ar.sceneform:core:$arcore_version"
     implementation "com.google.ar.sceneform.ux:sceneform-ux:$arcore_version"

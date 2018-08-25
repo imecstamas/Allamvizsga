@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".feature.station.StationArActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <fragment
-        android:id="@+id/ux_fragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.allamvizsga.tamas.feature.station.StationArViewModel" />
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:context=".feature.station.StationArActivity">
 
-</FrameLayout>
+        <fragment
+            android:id="@+id/ux_fragment"
+            android:name="com.google.ar.sceneform.ux.ArFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:text="@string/walk_finished"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/white"
+                app:visible="@{!viewModel.isNextStationAvailable}" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/replay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play_arrow_black_24dp" />
+
+            <Button
+                android:id="@+id/next_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="@{viewModel.isNextStationAvailable ? @string/next_station_text : @string/back_to_list}" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

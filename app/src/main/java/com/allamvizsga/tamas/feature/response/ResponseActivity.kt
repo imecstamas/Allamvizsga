@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -32,9 +33,10 @@ import org.koin.core.parameter.parametersOf
 
 class ResponseActivity : AppCompatActivity() {
 
-    lateinit var revealAnimation: RevealAnimation
-    lateinit var responseViewModel: ResponseViewModel
+    private lateinit var revealAnimation: RevealAnimation
+    private lateinit var responseViewModel: ResponseViewModel
     private var pendingIntent: PendingIntent? = null
+    private lateinit var clickedButton: Buttons
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,28 +47,16 @@ class ResponseActivity : AppCompatActivity() {
             revealAnimation = RevealAnimation(root, intent, this@ResponseActivity)
             navigateButton.setOnClickListener {
                 registerStation()
-
-                with(responseViewModel.station.coordinate) {
-                    val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$latitude,$longitude"))
-                    mapIntent.setPackage("com.google.android.apps.maps")
-                    if (mapIntent.resolveActivity(packageManager) != null) {
-                        startActivity(mapIntent)
-                    }
-                }
+                clickedButton = Buttons.NAVIGATE
             }
             findItButton.setOnClickListener {
                 registerStation()
+                clickedButton = Buttons.FIND_IT
             }
         }
     }
 
     private fun registerStation() {
-//        //TODO remove this
-//        if (isDeviceSupported()) {
-//            startActivity(StationArActivity.getStartIntent(this, responseViewModel.station))
-//        } else {
-//            startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
-//        }
         runWithPermission(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 LOCATION_PERMISSION_REQUEST_CODE,
@@ -115,6 +105,26 @@ class ResponseActivity : AppCompatActivity() {
         Awareness.getFenceClient(this).updateFences(builder.build())
                 .addOnSuccessListener {
                     responseViewModel.saveRegisteredStation()
+                    Handler().postDelayed({
+                        when (clickedButton) {
+                            Buttons.FIND_IT -> println()              //TODO close the app
+                            Buttons.NAVIGATE -> {
+                                with(responseViewModel.station.coordinate) {
+                                    val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$latitude,$longitude"))
+                                    mapIntent.setPackage("com.google.android.apps.maps")
+                                    if (mapIntent.resolveActivity(packageManager) != null) {
+                                        startActivity(mapIntent)
+                                    }
+                                }
+                            }
+                        }
+                        //TODO remove this
+                        if (isDeviceSupported()) {
+                            startActivity(StationArActivity.getStartIntent(this, responseViewModel.station))
+                        } else {
+                            startActivity(StationDetailActivity.getStartIntent(this, responseViewModel.station))
+                        }
+                    }, 500)
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Failure Location", Toast.LENGTH_SHORT).show()
@@ -164,5 +174,9 @@ class ResponseActivity : AppCompatActivity() {
                     .putExtra(RevealAnimation.EXTRA_CIRCULAR_REVEAL_X, revealX)
                     .putExtra(RevealAnimation.EXTRA_CIRCULAR_REVEAL_Y, revealY)
         }
+    }
+
+    enum class Buttons {
+        NAVIGATE, FIND_IT
     }
 }

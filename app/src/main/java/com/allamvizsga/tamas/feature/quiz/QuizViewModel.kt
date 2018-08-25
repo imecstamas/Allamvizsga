@@ -19,9 +19,11 @@ class QuizViewModel(val question: Question) : ViewModel() {
         checkEnabled.set(true)
         selectedAnswer = question.answers[position].also { answer ->
             val start = question.text.indexOf("_")
-            val spannable = SpannableString(question.text.replace("__________", answer.text))
-            spannable.setSpan(UnderlineSpan(), start, start + answer.text.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            questionText.set(spannable)
+            if (start != -1) {
+                val spannable = SpannableString(question.text.replace("__________", answer.text))
+                spannable.setSpan(UnderlineSpan(), start, start + answer.text.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                questionText.set(spannable)
+            }
         }
     }
 

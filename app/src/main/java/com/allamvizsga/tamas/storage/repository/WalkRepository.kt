@@ -25,7 +25,6 @@ class WalkRepository(
             emitter.onSuccess(walks)
         }, { error ->
             emitter.onError(error)
-
         })
     }
 
@@ -99,6 +98,22 @@ class WalkRepository(
     }
 
     fun getStartedWalkId() = sharedPreferencesManager.getStartedWalkId()
+
+    fun getNextStation(): Single<Station?> {
+        val currentStationId = sharedPreferencesManager.getRegisteredStationId()
+        val currentWalkId = sharedPreferencesManager.getStartedWalkId()
+        return getStationsByWalkId(currentWalkId!!).flatMap { stations ->
+            var nextStationIndex = 0
+            stations.forEachIndexed { index, station ->
+                if (station.id == currentStationId) {
+                    nextStationIndex = index + 1
+                    return@forEachIndexed
+                }
+            }
+            val nextStation = stations[nextStationIndex]
+            Single.just(nextStation)
+        }
+    }
 
     companion object {
         private const val WALKS = "walks"
