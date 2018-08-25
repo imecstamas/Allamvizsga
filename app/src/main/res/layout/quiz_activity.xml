@@ -32,7 +32,9 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="@{viewModel.questionText}"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintBottom_toTopOf="@+id/answers"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             tools:text="A kolozsvári Képzőművészeti és Formatervezési Egyetem eredetileg ... volt." />
@@ -45,6 +47,7 @@
             app:answers="@{viewModel.question.answers}"
             app:layout_constraintBottom_toTopOf="@+id/check_button"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/question" />
 
@@ -57,7 +60,9 @@
             android:text="@string/check"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/answers" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

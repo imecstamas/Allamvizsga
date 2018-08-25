@@ -1,6 +1,7 @@
 package com.allamvizsga.tamas.util.binding
 
 import android.databinding.BindingAdapter
+import android.os.Build
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.design.widget.Snackbar
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.feature.shared.SnackbarState
 import com.allamvizsga.tamas.model.Answer
 import com.bumptech.glide.Glide
@@ -50,6 +52,12 @@ fun RadioGroup.setAnswers(answers: List<Answer>) {
         val radioButton = RadioButton(context)
         radioButton.id = index
         radioButton.text = answer.text
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            radioButton.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead)
+        } else {
+            @Suppress("DEPRECATION")
+            radioButton.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead)
+        }
         addView(radioButton)
     }
 }
