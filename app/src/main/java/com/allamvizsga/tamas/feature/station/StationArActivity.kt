@@ -159,36 +159,38 @@ class StationArActivity : AppCompatActivity() {
 
                             //iterate through all hits
                             val hitTestIterator = hitTest.iterator()
-                            val hitResult = hitTestIterator.next()
+                            if (hitTestIterator.hasNext()) {
+                                val hitResult = hitTestIterator.next()
 
-                            // Create the Anchor.
-                            val anchor = hitResult.createAnchor()
-                            val anchorNode = AnchorNode(anchor)
-                            anchorNode.setParent(arFragment.arSceneView.scene)
+                                // Create the Anchor.
+                                val anchor = hitResult.createAnchor()
+                                val anchorNode = AnchorNode(anchor)
+                                anchorNode.setParent(arFragment.arSceneView.scene)
 
-                            // Create a node to render the video and add it to the anchor.
-                            //          Node videoNode = new Node();
-                            val videoNode = TransformableNode(arFragment.transformationSystem)
-                            videoNode.setParent(anchorNode)
-                            //Alter the real world position to ensure object renders on the table top. Not somewhere inside.
-                            videoNode.worldPosition = Vector3(anchor.pose.tx(),
-                                    anchor.pose.compose(Pose.makeTranslation(0f, 0.05f, 0f)).ty(),
-                                    anchor.pose.tz())
+                                // Create a node to render the video and add it to the anchor.
+                                //          Node videoNode = new Node();
+                                val videoNode = TransformableNode(arFragment.transformationSystem)
+                                videoNode.setParent(anchorNode)
+                                //Alter the real world position to ensure object renders on the table top. Not somewhere inside.
+                                videoNode.worldPosition = Vector3(anchor.pose.tx(),
+                                        anchor.pose.compose(Pose.makeTranslation(0f, 0.05f, 0f)).ty(),
+                                        anchor.pose.tz())
 
-                            // Set the scale of the node so that the aspect ratio of the video is correct.
-                            videoNode.localScale = Vector3(
-                                    VIDEO_HEIGHT_METERS * (videoWidth / videoHeight), VIDEO_HEIGHT_METERS, 1.0f)
+                                // Set the scale of the node so that the aspect ratio of the video is correct.
+                                videoNode.localScale = Vector3(
+                                        VIDEO_HEIGHT_METERS * (videoWidth / videoHeight), VIDEO_HEIGHT_METERS, 1.0f)
 
-                            // Start playing the video when the first node is placed.
-                            player.playWhenReady = true
+                                // Start playing the video when the first node is placed.
+                                player.playWhenReady = true
 
 
-                            // Wait to set the renderable until the first frame of the  video becomes available.
-                            // This prevents the renderable from briefly appearing as a black quad before the video
-                            // plays.
-                            texture.surfaceTexture.setOnFrameAvailableListener { _: SurfaceTexture ->
-                                videoNode.renderable = videoRenderable
-                                texture.surfaceTexture.setOnFrameAvailableListener(null)
+                                // Wait to set the renderable until the first frame of the  video becomes available.
+                                // This prevents the renderable from briefly appearing as a black quad before the video
+                                // plays.
+                                texture.surfaceTexture.setOnFrameAvailableListener { _: SurfaceTexture ->
+                                    videoNode.renderable = videoRenderable
+                                    texture.surfaceTexture.setOnFrameAvailableListener(null)
+                                }
                             }
                         }
                     }
