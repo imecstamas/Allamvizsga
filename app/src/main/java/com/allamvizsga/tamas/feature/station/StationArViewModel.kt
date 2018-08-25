@@ -5,11 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import com.allamvizsga.tamas.model.Station
+import com.allamvizsga.tamas.storage.repository.StationRepository
 import com.allamvizsga.tamas.storage.repository.WalkRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class StationArViewModel(walkRepository: WalkRepository) : ViewModel() {
+class StationArViewModel(private val walkRepository: WalkRepository, private val stationRepository: StationRepository) : ViewModel() {
 
     private val _nextStation = MutableLiveData<Station>()
     val nextStation: LiveData<Station?> get() = _nextStation
@@ -23,5 +24,11 @@ class StationArViewModel(walkRepository: WalkRepository) : ViewModel() {
                     _nextStation.value = it
                     isNextStationAvailable.set(it != null)
                 }, {})
+    }
+
+    fun getRegisteredStationId() = stationRepository.getRegisteredStationId()
+
+    fun stopWalk() {
+        walkRepository.stopWalk()
     }
 }

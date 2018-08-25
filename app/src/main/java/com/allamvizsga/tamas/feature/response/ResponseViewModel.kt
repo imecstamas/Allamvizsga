@@ -42,5 +42,5 @@ class ResponseViewModel(correctAnswer: Boolean, val station: Station, private va
         stationRepository.saveRegisteredStation(station.id!!)
     }
 
-    fun getRegisteredStation() = stationRepository.getRegisteredStation()
+    fun getRegisteredStationId() = stationRepository.getRegisteredStationId()
 }

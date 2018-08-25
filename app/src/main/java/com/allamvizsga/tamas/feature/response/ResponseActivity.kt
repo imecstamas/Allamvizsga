@@ -25,8 +25,6 @@ import com.allamvizsga.tamas.util.extension.runWithPermission
 import com.google.android.gms.awareness.Awareness
 import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import com.google.android.gms.awareness.fence.LocationFence
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -88,12 +86,9 @@ class ResponseActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun startLocationServices() {
         //Unregister the geofence for the previous station
-        responseViewModel.getRegisteredStation()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ station ->
-                    FenceUpdateRequest.Builder().removeFence(station.id)
-                }, {})
+        responseViewModel.getRegisteredStationId()?.let { stationId ->
+            Awareness.getFenceClient(this).updateFences(FenceUpdateRequest.Builder().removeFence(stationId).build())
+        }
 
         //Register new fences
         val builder = FenceUpdateRequest.Builder()

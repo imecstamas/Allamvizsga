@@ -20,6 +20,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.gms.awareness.Awareness
+import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -45,6 +47,10 @@ class WalkDetailActivity : BaseActivity() {
             if (viewModel.walkAlreadyStarted) {
                 //We need to stop the walkWithStations
                 viewModel.stopWalk()
+                //Unregister the geofence for the previous station
+                viewModel.getRegisteredStationId()?.let { stationId ->
+                    Awareness.getFenceClient(this).updateFences(FenceUpdateRequest.Builder().removeFence(stationId).build())
+                }
             } else {
                 //We need to start the walkWithStations, ask the first question
                 viewModel.startWalk()

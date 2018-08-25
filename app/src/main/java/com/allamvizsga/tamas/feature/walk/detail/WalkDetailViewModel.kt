@@ -6,12 +6,13 @@ import android.databinding.ObservableInt
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.feature.shared.SnackbarState
 import com.allamvizsga.tamas.model.Walk
+import com.allamvizsga.tamas.storage.repository.StationRepository
 import com.allamvizsga.tamas.storage.repository.WalkRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class WalkDetailViewModel(private val walkRepository: WalkRepository, val walk: Walk) : ViewModel() {
+class WalkDetailViewModel(private val walkRepository: WalkRepository, private val stationRepository: StationRepository, val walk: Walk) : ViewModel() {
 
     private val disposable: Disposable
 
@@ -60,6 +61,8 @@ class WalkDetailViewModel(private val walkRepository: WalkRepository, val walk: 
         walkRepository.stopWalk()
         walkAlreadyStarted = false
     }
+
+    fun getRegisteredStationId() = stationRepository.getRegisteredStationId()
 
     override fun onCleared() {
         disposable.dispose()

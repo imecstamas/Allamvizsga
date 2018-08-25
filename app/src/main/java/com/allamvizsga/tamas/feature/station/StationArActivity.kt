@@ -29,6 +29,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.VideoListener
+import com.google.android.gms.awareness.Awareness
+import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import com.google.ar.core.Plane
 import com.google.ar.core.Pose
 import com.google.ar.core.TrackingState
@@ -66,7 +68,9 @@ class StationArActivity : AppCompatActivity() {
                     if (nextStation != null) {
                         startActivity(QuizActivity.getStartIntent(this@StationArActivity, nextStation))
                     } else {
-                        //TODO stop walk/unregister fence/remove from shared prefs
+                        //Unregister the geofence for the previous station
+                        Awareness.getFenceClient(this@StationArActivity).updateFences(FenceUpdateRequest.Builder().removeFence(stationViewModel.getRegisteredStationId()).build())
+                        stationViewModel.stopWalk()
                         startActivity(WalkListActivity.getStartIntent(this@StationArActivity))
                     }
                 }

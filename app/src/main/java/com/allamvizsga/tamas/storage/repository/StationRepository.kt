@@ -22,7 +22,7 @@ class StationRepository(private val databaseReference: DatabaseReference, privat
         sharedPreferencesManager.saveRegisteredStation(stationId)
     }
 
-    fun getRegisteredStation() = getById(sharedPreferencesManager.getRegisteredStationId())
+    fun getRegisteredStationId() = sharedPreferencesManager.getRegisteredStationId()
 
     companion object {
         private const val STATIONS = "stations"
