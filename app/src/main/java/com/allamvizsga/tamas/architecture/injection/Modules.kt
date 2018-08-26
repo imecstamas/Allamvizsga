@@ -26,7 +26,7 @@ val storageModule = module {
 val viewModelModule = module {
     viewModel { WalkListViewModel(get()) }
     viewModel { (walk: Walk) -> WalkDetailViewModel(get(), get(), walk) }
-    viewModel { StationViewModel(get()) }
+    viewModel { StationViewModel(get(), get()) }
     viewModel { (isCorrectAnswer: Boolean, nextStation: Station) -> ResponseViewModel(isCorrectAnswer, nextStation, get()) }
     viewModel { (question: Question) -> QuizViewModel(question) }
     viewModel { StationArViewModel(get(), get()) }

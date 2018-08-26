@@ -53,7 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@{viewModel.isNextStationAvailable ? @string/next_station_text : @string/back_to_list}" />
+                android:text="@{viewModel.isNextStationAvailable ? @string/next_station_text : @string/back_to_list}"
+                tools:text="@string/next_station" />
 
         </LinearLayout>
 

@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.StationDetailBinding
+import com.allamvizsga.tamas.feature.quiz.QuizActivity
+import com.allamvizsga.tamas.feature.walk.list.WalkListActivity
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.util.extension.setUpToolbar
+import com.google.android.gms.awareness.Awareness
+import com.google.android.gms.awareness.fence.FenceUpdateRequest
 import org.koin.android.viewmodel.ext.android.getViewModel
 
 class StationDetailActivity : AppCompatActivity() {
@@ -22,6 +26,18 @@ class StationDetailActivity : AppCompatActivity() {
                         viewModel.initStation(station)
                     } else {
                         viewModel.getStationById(intent.getStringExtra(STATION_ID))
+                    }
+                }
+                nextStation.setOnClickListener {
+                    viewModel.nextStation.value.let { nextStation ->
+                        if (nextStation != null) {
+                            startActivity(QuizActivity.getStartIntent(this@StationDetailActivity, nextStation))
+                        } else {
+                            //Unregister the geofence for the previous station
+                            Awareness.getFenceClient(this@StationDetailActivity).updateFences(FenceUpdateRequest.Builder().removeFence(viewModel.getRegisteredStationId()).build())
+                            viewModel.stopWalk()
+                            startActivity(WalkListActivity.getStartIntent(this@StationDetailActivity))
+                        }
                     }
                 }
             }

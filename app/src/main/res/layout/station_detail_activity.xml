@@ -74,13 +74,15 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:animateLayoutChanges="true"
             android:background="@android:color/white"
-            android:elevation="@dimen/appbar_elevation"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:elevation="@dimen/player_elevation"
+            android:orientation="vertical"
+            android:padding="@dimen/base_line">
 
             <ImageButton
                 android:id="@+id/button"
@@ -89,19 +91,49 @@
                 android:background="?selectableItemBackgroundBorderless"
                 android:onClick="@{() -> viewModel.onButtonClicked()}"
                 android:src="@{viewModel.buttonDrawableRes}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription"
                 tools:src="@drawable/ic_play_arrow_black_24dp" />
 
             <SeekBar
                 android:id="@+id/seek_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
                 android:max="@{viewModel.maxProgress}"
                 android:onProgressChanged="@{(view, progress, fromUser) -> viewModel.onProgressChanged(progress, fromUser)}"
-                android:progress="@{viewModel.progressPosition}" />
+                android:progress="@{viewModel.progressPosition}"
+                app:layout_constraintBottom_toBottomOf="@id/button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/button"
+                app:layout_constraintTop_toTopOf="@id/button" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/walk_finished_text"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/walk_finished"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/next_station"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button"
+                app:visible="@{viewModel.isWalkFinishedVisible}" />
+
+            <Button
+                android:id="@+id/next_station"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.isNextStationAvailable ? @string/next_station_text : @string/back_to_list}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button"
+                app:visible="@{viewModel.isNextStationButtonEnabled}"
+                tools:text="@string/next_station" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

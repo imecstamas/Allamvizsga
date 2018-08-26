@@ -1,22 +1,25 @@
 package com.allamvizsga.tamas.feature.station
 
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableBoolean
 import android.databinding.ObservableInt
 import com.allamvizsga.tamas.R
 import com.allamvizsga.tamas.model.Station
 import com.allamvizsga.tamas.storage.repository.StationRepository
+import com.allamvizsga.tamas.storage.repository.WalkRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-class StationViewModel(private val stationsRepository: StationRepository) : ViewModel() {
+class StationViewModel(walkRepository: WalkRepository, private val stationsRepository: StationRepository) : StationArViewModel(walkRepository, stationsRepository) {
 
     private var disposable: Disposable? = null
     private var seekBarUpdater: Disposable? = null
     private var mediaPlayer: MediaPlayerHolder? = null
+    val isNextStationButtonEnabled = ObservableBoolean(false)
+    val isWalkFinishedVisible = ObservableBoolean(false)
 
     val station = MutableLiveData<Station>()
 
@@ -53,6 +56,10 @@ class StationViewModel(private val stationsRepository: StationRepository) : View
                 seekBarUpdater?.dispose()
                 buttonDrawableRes.set(R.drawable.ic_play_arrow_black_24dp)
                 mediaPlayer = null
+                isNextStationButtonEnabled.set(true)
+                if (!isNextStationAvailable.get()) {
+                    isWalkFinishedVisible.set(true)
+                }
             }
         }
     }

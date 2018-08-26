@@ -10,7 +10,7 @@ import com.allamvizsga.tamas.storage.repository.WalkRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class StationArViewModel(private val walkRepository: WalkRepository, private val stationRepository: StationRepository) : ViewModel() {
+open class StationArViewModel(private val walkRepository: WalkRepository, private val stationRepository: StationRepository) : ViewModel() {
 
     private val _nextStation = MutableLiveData<Station>()
     val nextStation: LiveData<Station?> get() = _nextStation
